@@ -1,3 +1,4 @@
+import logo from './logo.svg';
 import './App.css';
 
 function App() {
@@ -5,9 +6,9 @@ function App() {
     <div className="App">
          <div className="App">
       <header className="App-header">
-        <h1>다개미의 취업을 추카합니댜~~</h1>
-        {/* <p>저는 [이또찌맘]입니다.</p>
-        <p>여기에서 저에 대해 소개할 수 있습니다. hihi</p> */}
+        <h1>안녕하세요!</h1>
+        <p>저는 [이또찌맘]입니다.</p>
+        <p>여기에서 저에 대해 소개할 수 있습니다.ㅎㅎ</p>
       </header>
     </div>
     </div>
