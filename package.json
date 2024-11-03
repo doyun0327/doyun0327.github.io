@@ -18,7 +18,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "react-scripts start",
-    "stg": "react-scripts build && serve -s build -l 80"
+     "stg": "react-scripts build && serve -s build -l 6500"
   },
   "eslintConfig": {
     "extends": [
