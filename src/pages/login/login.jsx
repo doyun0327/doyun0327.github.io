@@ -1,7 +1,7 @@
 // Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 
 const Login = () => {
   //   const [id, setId] = useState("");
@@ -22,7 +22,7 @@ const Login = () => {
   //   };
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const handleLogin = async () => {
     // const response = await axios.get("http://localhost:3000/", {
