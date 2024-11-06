@@ -25,18 +25,21 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    try {
-      const response = await axios.post("http://localhost:3000", {
-        id,
-        password,
-      });
+    // const response = await axios.get("http://localhost:3000/", {
+    //   id,
+    //   password,
+    // });
 
-      // 로그인 성공 시, 홈으로 이동
-      if (response.data.token) {
-        navigate("/home");
+    try {
+      const response = await fetch("http://localhost:4000/login"); //cors,bodyparser 확인..
+      //navigate("/home");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
+      const data = await response.json();
+      console.log(data);
     } catch (error) {
-      console.error("로그인 오류:", error);
+      console.error("Fetch error: ", error);
     }
   };
   return (
@@ -51,6 +54,7 @@ const Login = () => {
             onChange={(e) => setId(e.target.value)}
             placeholder="아이디를 입력하세요"
             style={styles.input}
+            id="id"
           ></input>
         </div>
         <div style={styles.inputGroup}>
@@ -61,6 +65,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호를 입력하세요"
             style={styles.input}
+            id="password"
           ></input>
         </div>
         <button type="submit" style={styles.button}>
