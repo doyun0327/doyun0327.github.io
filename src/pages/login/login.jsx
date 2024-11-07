@@ -1,6 +1,6 @@
 // Login.jsx
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 //import axios from "axios";
 
 const Login = () => {
@@ -22,26 +22,37 @@ const Login = () => {
   //   };
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
-    // const response = await axios.get("http://localhost:3000/", {
-    //   id,
-    //   password,
-    // });
+    const data = {
+      id: id,
+      password: password,
+    };
 
     try {
-      const response = await fetch("http://localhost:4000/login"); //cors,bodyparser 확인..
-      //navigate("/home");
+      const response = await fetch("http://localhost:4000/login", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      // 응답이 정상적이지 않으면 에러 처리
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
-      console.log(data);
+
+      // const responseData = await response.json();
+      // console.log(responseData);
+
+      navigate("/home"); // navigate가 사용 가능하면 주석 해제
     } catch (error) {
       console.error("Fetch error: ", error);
     }
   };
+
   return (
     <div style={styles.container}>
       <h2>로그인</h2>

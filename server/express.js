@@ -4,11 +4,19 @@ const app = express();
 //포트 지정
 const port = 4000;
 
-//middleware이다.
-//client가 "/"경로에 get 요청을 보내면
-//req는 요청객체, res는 응답객체 이다.
-app.get("/login", (req, res) => {
-  res.send("Hello World!");
+//확인 -  // 이 미들웨어가 있어야 req.body에서 JSON 데이터를 파싱할 수 있습니다.
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("연결성공");
+});
+
+app.post("/login", (req, res) => {
+  const { id, password } = req.body; // req.body에서 id와 password를 바로 추출
+  console.log("Received ID:", id); // id 값 출력
+  console.log("Received Password:", password); // password 값 출력
+  res.json({ message: "Login successful" });
+  //res.send("로그인성공");
 });
 
 //middleware
