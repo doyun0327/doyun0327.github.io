@@ -52,11 +52,15 @@ const TableWithIntersectionObserver = () => {
     const currentRef = observeRef.current;
 
     // 각 항목에 대해 observer를 설정
-    currentRef.forEach((el) => observer.observe(el));
+    if (currentRef.length > 0) {
+      currentRef.forEach((el) => observer.observe(el));
+    }
 
     // 컴포넌트가 언마운트될 때 observer를 해제
     return () => {
-      currentRef.forEach((el) => observer.unobserve(el));
+      if (currentRef.length > 0) {
+        currentRef.forEach((el) => observer.unobserve(el));
+      }
     };
   }, []);
 
