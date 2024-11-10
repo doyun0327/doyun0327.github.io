@@ -57,55 +57,55 @@
 //     }
 
 //     // 컴포넌트가 언마운트될 때 observer를 해제
-//     return () => {
+//   return () => {
 //       if (currentRef.length > 0) {
 //         currentRef.forEach((el) => observer.unobserve(el));
 //       }
 //     };
 //   }, []);
 
-  return (
-    <div>
-      <TableContainer component={Paper} sx={{ marginTop: 2 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Age</TableCell>
-              <TableCell>City</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row, index) => (
-              <TableRow
-                key={row.id}
-                data-index={index}  // 각 항목의 인덱스를 데이터로 저장
-                ref={(el) => (observeRef.current[index] = el)} // ref를 사용하여 Intersection Observer와 연결
-              >
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.age}</TableCell>
-                <TableCell>{row.city}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+//   return (
+//     <div>
+//       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+//         <Table>
+//           <TableHead>
+//             <TableRow>
+//               <TableCell>ID</TableCell>
+//               <TableCell>Name</TableCell>
+//               <TableCell>Age</TableCell>
+//               <TableCell>City</TableCell>
+//             </TableRow>
+//           </TableHead>
+//           <TableBody>
+//             {rows.map((row, index) => (
+//               <TableRow
+//                 key={row.id}
+//                 data-index={index}  // 각 항목의 인덱스를 데이터로 저장
+//                 ref={(el) => (observeRef.current[index] = el)} // ref를 사용하여 Intersection Observer와 연결
+//               >
+//                 <TableCell>{row.id}</TableCell>
+//                 <TableCell>{row.name}</TableCell>
+//                 <TableCell>{row.age}</TableCell>
+//                 <TableCell>{row.city}</TableCell>
+//               </TableRow>
+//             ))}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
 
-      <div>
-        <h3>현재 화면에 보이는 데이터:</h3>
-        <ul>
-          {visibleRows.map((item) => (
-            <li key={item.id}>{`${item.id}: ${item.name}, ${item.age}, ${item.city}`}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
+//       <div>
+//         <h3>현재 화면에 보이는 데이터:</h3>
+//         <ul>
+//           {visibleRows.map((item) => (
+//             <li key={item.id}>{`${item.id}: ${item.name}, ${item.age}, ${item.city}`}</li>
+//           ))}
+//         </ul>
+//       </div>
+//     </div>
+//   );
+// };
 
-export default TableWithIntersectionObserver;
+// export default TableWithIntersectionObserver;
 
 
 
