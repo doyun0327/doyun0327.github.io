@@ -29,7 +29,6 @@ const TableWithIntersectionObserver = () => {
       entries.forEach((entry) => {
         
         const index = entry.target.dataset.index;
-        const currentRef = observeRef.current;//추가
       //  console.log(entry.target.dataset)
         if (entry.isIntersecting) {//화면에 보여야할 요소
           setVisibleRows((prev) => {
@@ -49,12 +48,11 @@ const TableWithIntersectionObserver = () => {
     }, { rootMargin: '0px',  threshold: 1.0 });
 
     // 각 항목에 대해 observer를 설정
-    // observeRef.current.forEach((el) => observer.observe(el));
-      currentRef.forEach((el) => observer.observe(el));
+    observeRef.current.forEach((el) => observer.observe(el));
+
     // 컴포넌트가 언마운트될 때 observer를 해제
     return () => {
-     // observeRef.current.forEach((el) => observer.unobserve(el));
-     currentRef.forEach((el) => observer.unobserve(el));
+      observeRef.current.forEach((el) => observer.unobserve(el));
     };
   }, []);
 
