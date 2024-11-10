@@ -1,68 +1,68 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+// import React, { useState, useEffect, useRef } from 'react';
+// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
-const TableWithIntersectionObserver = () => {
-  const generateRows = () => {
-    const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose'];
-    const names = [
-      'John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Brown', 'Charlie Davis', 'David Wilson', 'Emily Harris', 'Frank Clark', 'Grace Lewis', 'Hannah Walker',
-      'Ivy Hall', 'Jack Young', 'Kathy Adams', 'Luke Mitchell', 'Megan King', 'Nate Scott', 'Olivia Perez', 'Paul Thompson', 'Quincy Rodriguez', 'Rachel White',
-      'Sam Lewis', 'Tina Hall', 'Ursula Allen', 'Vince Green', 'Walter Carter', 'Xander Evans', 'Yvonne Nelson', 'Zack Turner', 'Aaron Martin', 'Bella Lee'
-    ];
+// const TableWithIntersectionObserver = () => {
+//   const generateRows = () => {
+//     const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose'];
+//     const names = [
+//       'John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Brown', 'Charlie Davis', 'David Wilson', 'Emily Harris', 'Frank Clark', 'Grace Lewis', 'Hannah Walker',
+//       'Ivy Hall', 'Jack Young', 'Kathy Adams', 'Luke Mitchell', 'Megan King', 'Nate Scott', 'Olivia Perez', 'Paul Thompson', 'Quincy Rodriguez', 'Rachel White',
+//       'Sam Lewis', 'Tina Hall', 'Ursula Allen', 'Vince Green', 'Walter Carter', 'Xander Evans', 'Yvonne Nelson', 'Zack Turner', 'Aaron Martin', 'Bella Lee'
+//     ];
 
-    const rows = [];
-    for (let i = 1; i <= 50; i++) {
-      const randomName = names[Math.floor(Math.random() * names.length)];
-      const randomCity = cities[Math.floor(Math.random() * cities.length)];
-      const randomAge = Math.floor(Math.random() * 40) + 20; // 20 ~ 60 사이의 나이
-      rows.push({ id: i, name: randomName, age: randomAge, city: randomCity });
-    }
-    return rows;
-  };
+//     const rows = [];
+//     for (let i = 1; i <= 50; i++) {
+//       const randomName = names[Math.floor(Math.random() * names.length)];
+//       const randomCity = cities[Math.floor(Math.random() * cities.length)];
+//       const randomAge = Math.floor(Math.random() * 40) + 20; // 20 ~ 60 사이의 나이
+//       rows.push({ id: i, name: randomName, age: randomAge, city: randomCity });
+//     }
+//     return rows;
+//   };
 
-  const rows = generateRows();
+//   const rows = generateRows();
 
-  const [visibleRows, setVisibleRows] = useState([]);
-  const observeRef = useRef([]);
+//   const [visibleRows, setVisibleRows] = useState([]);
+//   const observeRef = useRef([]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+//   useEffect(() => {
+//     const observer = new IntersectionObserver((entries) => {
+//       entries.forEach((entry) => {
         
-        const index = entry.target.dataset.index;
-      //  console.log(entry.target.dataset)
-        if (entry.isIntersecting) {//화면에 보여야할 요소
-          setVisibleRows((prev) => {
-            const newList = [...prev];
-            if (!newList.some((item) => item.id === rows[index].id)) {
-              newList.push(rows[index]);
-              newList.sort((a,b)=>a.id -b.id);
-              console.log('SSE 요청 보내기:', newList);
-            }
-            return newList;
-          });
-        } else {
-          // 화면에서 벗어난 항목은 visibleRows에서 제거
-          setVisibleRows((prev) => prev.filter((item) => item.id !== rows[index].id));
-        }
-      });
-    }, { rootMargin: '0px',  threshold: 1.0 });
+//         const index = entry.target.dataset.index;
+//       //  console.log(entry.target.dataset)
+//         if (entry.isIntersecting) {//화면에 보여야할 요소
+//           setVisibleRows((prev) => {
+//             const newList = [...prev];
+//             if (!newList.some((item) => item.id === rows[index].id)) {
+//               newList.push(rows[index]);
+//               newList.sort((a,b)=>a.id -b.id);
+//               console.log('SSE 요청 보내기:', newList);
+//             }
+//             return newList;
+//           });
+//         } else {
+//           // 화면에서 벗어난 항목은 visibleRows에서 제거
+//           setVisibleRows((prev) => prev.filter((item) => item.id !== rows[index].id));
+//         }
+//       });
+//     }, { rootMargin: '0px',  threshold: 1.0 });
 
 
-    const currentRef = observeRef.current;
+//     const currentRef = observeRef.current;
 
-    // 각 항목에 대해 observer를 설정
-    if (currentRef.length > 0) {
-      currentRef.forEach((el) => observer.observe(el));
-    }
+//     // 각 항목에 대해 observer를 설정
+//     if (currentRef.length > 0) {
+//       currentRef.forEach((el) => observer.observe(el));
+//     }
 
-    // 컴포넌트가 언마운트될 때 observer를 해제
-    return () => {
-      if (currentRef.length > 0) {
-        currentRef.forEach((el) => observer.unobserve(el));
-      }
-    };
-  }, []);
+//     // 컴포넌트가 언마운트될 때 observer를 해제
+//     return () => {
+//       if (currentRef.length > 0) {
+//         currentRef.forEach((el) => observer.unobserve(el));
+//       }
+//     };
+//   }, []);
 
   return (
     <div>
