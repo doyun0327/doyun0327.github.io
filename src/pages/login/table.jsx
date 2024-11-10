@@ -21,6 +21,7 @@ const TableWithIntersectionObserver = () => {
   };
 
   const rows = generateRows();
+
   const [visibleRows, setVisibleRows] = useState([]);
   const observeRef = useRef([]);
 
@@ -47,12 +48,15 @@ const TableWithIntersectionObserver = () => {
       });
     }, { rootMargin: '0px',  threshold: 1.0 });
 
+
+    const currentRef = observeRef.current;
+
     // 각 항목에 대해 observer를 설정
-    observeRef.current.forEach((el) => observer.observe(el));
+    currentRef.forEach((el) => observer.observe(el));
 
     // 컴포넌트가 언마운트될 때 observer를 해제
     return () => {
-      observeRef.current.forEach((el) => observer.unobserve(el));
+      currentRef.forEach((el) => observer.unobserve(el));
     };
   }, []);
 
