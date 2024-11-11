@@ -1,58 +1,85 @@
 // Login.jsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-//import axios from "axios";
+import React, { useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const Login = () => {
-  //   const [id, setId] = useState("");
-  //   const [password, setPassword] = useState("");
-  //   const [errorMessage, setErrorMessage] = useState("");
-  //   const navigate = useNavigate();
 
-  //   const handleLogin = async (event) => {
-  //     event.preventDefault();
-  //     setErrorMessage(""); // 오류 메시지 초기화
-  //     try {
-  //       const response = await axios.post("/api/login", { id, password });
-  //       localStorage.setItem("token", response.data.token); // 토큰 저장
-  //       navigate("/home"); // 로그인 성공 시 홈 페이지로 이동
-  //     } catch (error) {
-  //       setErrorMessage("로그인 실패: ID 또는 비밀번호를 확인해주세요.");
-  //     }
-  //   };
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
     const data = {
       id: id,
       password: password,
     };
-
+  
     try {
-      const response = await fetch("http://localhost:4000/login", {
-        method: "post",
+      // axios로 로그인 요청 보내기
+      const response = await axios.post("http://localhost:4000/login", data, {
         headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+          "Content-Type": "application/json", 
+        }
       });
-
-      // 응답이 정상적이지 않으면 에러 처리
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+  
+      if (response?.data?.message === "Login successful") {
+        localStorage.setItem("isLoggedIn", "true");
+        navigate("/home");
+      } else {
+        alert(response?.data?.message)
       }
-
-      // const responseData = await response.json();
-      // console.log(responseData);
-
-      navigate("/home"); // navigate가 사용 가능하면 주석 해제
     } catch (error) {
-      console.error("Fetch error: ", error);
+      console.error("로그인 중 에러 발생:", error);
+      alert("로그인 실패, 다시 시도해주세요.");
     }
   };
 
+
+  // const handleLogin = async (event) => {
+  //   event.preventDefault();
+  //   const data = {
+  //     id: id,
+  //     password: password,
+  //   };
+  
+  //   try {
+  //     const response = await fetch("http://localhost:4000/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+
+  
+  //     // 응답이 정상적이지 않으면 에러 처리
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  
+  //     // 응답을 JSON으로 파싱하고, 그 내용을 출력
+  //     const responseData = await response.json();
+  //     console.log("Response data:", responseData);
+  
+  //     // 응답 데이터에서 메시지를 받는 부분
+  //   if (responseData.message === "Login successful") {
+  //     localStorage.setItem("isLoggedIn", "true");
+  //     navigate("/home");
+  //   } else {
+  //     console.log("로그인 실패:", responseData.message);
+  //     alert(responseData.message); 
+  //   }
+  //   } catch (error) {
+  //     alert("Error: " + error.message);
+  //     console.error("Fetch error: ", error);
+  //   }
+  // };
+
+  
   return (
     <div style={styles.container}>
       <h2>로그인</h2>
