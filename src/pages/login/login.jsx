@@ -194,7 +194,7 @@ const Login = () => {
       });
 
       if (response?.data?.message === "Login successful") {
-        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token",response?.data?.token);
         navigate("/home");
       } else {
         alert(response?.data?.message);
