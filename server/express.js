@@ -30,7 +30,7 @@ app.post("/login", (req, res) => {
     const { id, password } = req.body;
 
     if (id === "test" && password === "test") {
-      const payload = { id };
+      const payload = { id, name: "테스트" };
       const token = jwt.sign(payload, secretKey, { expiresIn: "24h" });
       console.log("Token generated:", token); // 이 부분이 실행되도록 확인
 

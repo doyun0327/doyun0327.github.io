@@ -3,7 +3,9 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import {jwtDecode} from 'jwt-decode';
+import { setUser } from "../../redux/userSlice";
+import { useDispatch } from 'react-redux';
 // 유효성 검사 스키마
 const validationSchema = Yup.object({
   id: Yup.string().required("아이디를 입력하세요"),
@@ -11,6 +13,7 @@ const validationSchema = Yup.object({
 });
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
@@ -57,9 +60,13 @@ const Login = () => {
       });
 
       if (response?.data?.message === "Login successful") {
-        localStorage.setItem("token",response?.data?.token);
-        localStorage.setItem("userId",response?.data?.token.id); //name같은거 띄우어햠
-        fetchData();
+        // localStorage.setItem("token",response?.data?.token);
+        const decodedToken = jwtDecode(response.data.token);
+        console.log('decodedToken:'+JSON.stringify(decodedToken))
+        const userName = decodedToken.name;
+        // localStorage.setItem("userName", userName);       
+        dispatch(setUser({ id: decodedToken.id, name: userName }));
+       // fetchData();
         navigate("/home");
       } else {
         alert(response?.data?.message);
