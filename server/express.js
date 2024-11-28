@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 //포트 지정
 const port = 4000;
 const secretKey = process.env.REACT_APP_SECRET_KEY;
+const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 //확인 -  // 이 미들웨어가 있어야 req.body에서 JSON 데이터를 파싱할 수 있습니다.
 app.use(express.json());
 //app.use(cors());
@@ -31,15 +32,23 @@ app.post("/login", (req, res) => {
 
     if (id === "test" && password === "test") {
       const payload = { id, name: "테스트" };
-      const token = jwt.sign(payload, secretKey, { expiresIn: "24h" });
-      console.log("Token generated:", token); // 이 부분이 실행되도록 확인
+      const accessToken = jwt.sign(payload, secretKey, { expiresIn: "1h" });
 
-      res.json({ message: "Login successful", token });
+      // 리프레시 토큰 생성 (유효 기간 7일)
+      const refreshToken = jwt.sign(payload, refreshSecretKey, {
+        expiresIn: "7d",
+      });
+
+      res.json({
+        message: "Login successful",
+        accessToken,
+        refreshToken,
+      });
     } else {
       res.json({ message: "Invalid credentials" });
     }
   } catch (error) {
-    console.error("Error occurred:", error); // 에러 로그를 찍어줌
+    console.error("Error occurred:", error);
     res.status(500).json({ message: "Server error" });
   }
 });

@@ -52,7 +52,6 @@ const Login = () => {
     };
 
     try {
-    
       const response = await axios.post("http://localhost:4000/login", data, {
         headers: {
           "Content-Type": "application/json",
@@ -61,13 +60,28 @@ const Login = () => {
 
       if (response?.data?.message === "Login successful") {
         // localStorage.setItem("token",response?.data?.token);
-        const decodedToken = jwtDecode(response.data.token);
-        console.log('decodedToken:'+JSON.stringify(decodedToken))
+        // const decodedToken = jwtDecode(response.data.token);
+        // console.log('decodedToken:'+JSON.stringify(decodedToken))
+        // const userName = decodedToken.name;
+        // dispatch(setUser({ id: decodedToken.id, name: userName }));
+        // navigate("/home");
+        const { accessToken, refreshToken } = response.data;
+
+        localStorage.setItem("accessToken", accessToken);
+
+        // 리프레시 토큰을 세션 저장소에 저장 (예시, 보안상 서버에 저장 권장)
+        localStorage.setItem("refreshToken", refreshToken);
+       
+        // 토큰을 통해 사용자 정보를 상태로 저장 (예시)
+        const decodedToken = jwtDecode(accessToken);
+        console.log('accesstoekn:'+JSON.stringify(decodedToken));
+        console.log('accesstorefreshTokenekn:'+JSON.stringify(jwtDecode(refreshToken)))
         const userName = decodedToken.name;
-        // localStorage.setItem("userName", userName);       
         dispatch(setUser({ id: decodedToken.id, name: userName }));
-       // fetchData();
+  
+        // 홈으로 리디렉션
         navigate("/home");
+      
       } else {
         alert(response?.data?.message);
       }
