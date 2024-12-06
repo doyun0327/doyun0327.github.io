@@ -78,6 +78,9 @@ app.get("/protected", (req, res) => {
   });
 });
 
+app.post("/upload", (res, req) => {
+  console.log("업로드");
+});
 //port에 접속 성공하면 콜백 함수를 실행시킨다.
 app.listen(port, () => {
   console.log(`server open~~~~  http://localhost:${port}`);

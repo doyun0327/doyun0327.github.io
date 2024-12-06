@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { logout } from "../../redux/userSlice";
+import React, { useState } from 'react';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 function App() {
   const navigate = useNavigate();
@@ -15,18 +17,81 @@ function App() {
     navigate("/");
   }
 
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const formData = new FormData();
+    console.log('values:', JSON.stringify(values));
+  
+    // 이미지와 텍스트 데이터를 formData에 추가
+    formData.append('image', values.image);
+    formData.append('text', values.text);
+  
+    try {
+      // axios를 사용한 POST 요청
+      const response = await axios.post('http://localhost:4000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // axios는 자동으로 처리하지만, 명시적으로 설정할 수도 있음
+        },
+      });
+  
+      // 서버 응답 처리
+      if (response.status === 200) {
+        alert('업로드 성공!');
+      } else {
+        alert('업로드 실패!');
+      }
+    } catch (error) {
+      alert('오류가 발생했습니다!');
+      console.error(error);
+    }
+  
+    setSubmitting(false);
+  };
+  
+
   return (
     <div style={styles.container}>
-    {/* 로그아웃 버튼을 화면의 오른쪽 상단에 배치 */}
-    <button onClick={handleLogout} style={styles.button}>로그아웃</button>
+      {/* 로그아웃 버튼을 화면의 오른쪽 상단에 배치 */}
+      <button onClick={handleLogout} style={styles.button}>로그아웃</button>
+      <Formik
+        initialValues={{ text: '', image: null }}
+        // validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ setFieldValue, isSubmitting }) => (
+          <Form style={styles.form}>
+            <div style={styles.inputGroup}>
+              <label htmlFor="text">텍스트</label>
+              <Field
+                type="text"
+                name="text"
+                placeholder="텍스트를 입력하세요"
+                style={styles.input}
+              />
+              <ErrorMessage name="text" component="div" style={styles.error} />
+            </div>
 
-    {/* 헤더 스타일 */}
-    <header style={styles.header}>
-      <h3 style={styles.title}>{user?.name}님 안뇽하시옹</h3>
-    </header>
+            <div style={styles.inputGroup}>
+              <label htmlFor="image">이미지 업로드</label>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={(event) => {
+                  setFieldValue('image', event.currentTarget.files[0]);
+                }}
+                style={styles.fileInput}
+              />
+              <ErrorMessage name="image" component="div" style={styles.error} />
+            </div>
 
-    <p style={styles.text}>여기에서 저에 대해 소개하겠어요!! 또찌는 자요ㅋㅋ!</p>
-  </div>
+            <button type="submit" style={styles.button} disabled={isSubmitting}>
+              {isSubmitting ? '업로드 중...' : '업로드'}
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }
 
@@ -43,57 +108,60 @@ const styles = {
     position: 'relative', // button을 절대 위치로 배치하기 위해 필요
     boxSizing: 'border-box', // 패딩을 제외한 너비 계산
   },
-  // 헤더 스타일
-  header: {
+  
+  // 폼 스타일
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     width: '100%',
+    maxWidth: '500px',
     padding: '20px',
-    textAlign: 'center',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    borderRadius: '10px',
+    borderRadius: '8px',
+    backgroundColor: '#ffffff',
+    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+  },
+
+  inputGroup: {
     marginBottom: '20px',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
   },
-  // 제목 스타일
-  title: {
-    fontSize: '1.5rem',
-    margin: 0,
+
+  input: {
+    width: '100%',
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginTop: '5px',
+    boxSizing: 'border-box',
   },
-  // 텍스트 소개 스타일
-  text: {
-    fontSize: '1rem',
-    color: '#555',
-    textAlign: 'center',
-    marginBottom: '40px',
-    lineHeight: '1.5',
-    fontWeight: '300',
-    wordWrap: 'break-word',
+
+  fileInput: {
+    width: '100%',
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginTop: '5px',
+    cursor: 'pointer',
+    boxSizing: 'border-box',
   },
-  // 로그아웃 버튼 스타일 (오른쪽 상단에 위치)
+
+  error: {
+    color: 'red',
+    fontSize: '12px',
+    marginTop: '5px',
+  },
+
   button: {
-    position: 'absolute', // 화면의 오른쪽 상단에 고정
-    top: '20px',
-    right: '20px',
-    backgroundColor: '#007bff', // 빨간색 배경
+    padding: '10px 20px',
+    backgroundColor: '#007bff', 
     color: 'white',
     border: 'none',
-    padding: '10px 20px',
     borderRadius: '5px',
     fontSize: '1rem',
     cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  },
-  buttonHover: {
-    backgroundColor: '#e53935',
-  },
-  buttonActive: {
-    backgroundColor: '#c62828',
-  },
-  buttonFocus: {
-    outline: 'none',
-  },
-};
+    }
+  }
 
 export default App;
-
