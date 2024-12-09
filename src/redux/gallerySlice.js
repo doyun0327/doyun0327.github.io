@@ -15,12 +15,18 @@ const initialState = {
   gallery: [],
   status: "idle", // 로딩 상태
   error: null, // 에러 상태
+  seletedImage: "",
 };
 
 const gallerySlice = createSlice({
   name: "gallery",
   initialState,
-  reducers: {},
+  reducers: {
+    setSeletedImage: (state, action) => {
+      console.log("action.payload", action.payload);
+      state.seletedImage = action.payload; // action.payload는 이미지 이름 문자열
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchGalleryData.pending, (state) => {
@@ -37,4 +43,5 @@ const gallerySlice = createSlice({
   },
 });
 
+export const { setSeletedImage } = gallerySlice.reducer;
 export default gallerySlice.reducer;

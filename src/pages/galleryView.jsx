@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import  useGallery  from '../hooks/useGallery';
 import { useNavigate } from 'react-router-dom';
+import { CiEdit } from "react-icons/ci";
+import { useEditGallery } from '../hooks/useGallery';
 
 const GalleryView = () => {
   const { gallery, status, error, loadGalleryData } = useGallery();
   const navigate = useNavigate();
-  
+  const editGallery = useEditGallery();
+
   useEffect(()=>{
     loadGalleryData();
   },[])
@@ -36,6 +39,17 @@ const GalleryView = () => {
   const goHome = () =>{
    navigate('/home')
   }
+  
+
+  const handleEdit = (image)=>{
+    console.log('handleEdit ' + image);
+    if (image ) {
+       editGallery(image);  // Execute only if image is valid
+    //  navigate("/home");
+    } else {
+      console.log('No image provided');
+    }
+  }
 
   return (
     <div style={styles.galleryContainer}>
@@ -49,7 +63,8 @@ const GalleryView = () => {
                 alt={item.image}
                 style={styles.image}
               />
-              <p>{item.text.replace(/^ID: [0-9a-fA-F-]+/, '').trim() }</p>
+              <p>{item.text}<CiEdit onClick={()=>handleEdit(item.image)}></CiEdit></p>
+          
               <button   style={styles.editButton}  onClick={() => handleDelete(item.image)}>삭제</button>
             </div>
           ))
