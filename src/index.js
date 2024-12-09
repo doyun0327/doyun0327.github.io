@@ -11,6 +11,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import Table from "./pages/login/table";
 import CallBack from "./pages/home/callback";
+import GalleryView from "./pages/galleryView";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -22,6 +23,7 @@ root.render(
           <Route path="/home" element={<Home />} />
           <Route path="/table" element={<Table />} />
           <Route path="/call-back" element={<CallBack />} />
+          <Route path="/gallery" element={<GalleryView />} />
         </Routes>
       </Router>
     </PersistGate>

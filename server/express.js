@@ -5,6 +5,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+
 //포트 지정
 const port = 4000;
 const secretKey = process.env.REACT_APP_SECRET_KEY;
@@ -78,10 +82,102 @@ app.get("/protected", (req, res) => {
   });
 });
 
-app.post("/upload", (res, req) => {
-  console.log("업로드");
+// Set up storage engine for multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Define where to store the uploaded images
+    // cb(null, "C:/myIntro/doyun0327.github.io/server/images"); // Save images in the "uploads" folder
+    cb(null, "./images"); // Save images in the "uploads" folder
+  },
+  filename: function (req, file, cb) {
+    // Define the file name (use original name or generate a unique name)
+    cb(null, Date.now() + path.extname(file.originalname)); // Adding timestamp to avoid name collision
+  },
 });
-//port에 접속 성공하면 콜백 함수를 실행시킨다.
+
+// Initialize multer with the storage engine
+const upload = multer({ storage: storage });
+
+app.post("/upload", upload.single("image"), (req, res) => {
+  try {
+    if (!req.file) {
+      console.log("여기여");
+      return res.status(400).send("No file uploaded.");
+    }
+
+    // 폼에서 텍스트 데이터 가져오기
+    const text = req.body.text;
+
+    // 이미지 파일과 같은 이름으로 텍스트 파일 생성 (확장자는 .txt)
+    const textFilePath = path.join(
+      imageDir,
+      req.file.filename.replace(/\.(jpg|jpeg|png|gif)$/i, ".txt")
+    );
+
+    // 텍스트 파일로 저장
+    fs.writeFileSync(textFilePath, text, "utf-8"); // 텍스트 내용을 .txt 파일로 저장
+
+    console.log("Text:", text);
+    console.log("Uploaded file:", req.file);
+
+    // 클라이언트에게 응답
+    res.status(200).json({
+      message: "Upload successful!",
+      file: req.file, // 업로드된 파일 정보
+      textFile: textFilePath, // 텍스트 파일의 경로를 클라이언트에 반환
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error uploading file.");
+  }
+});
+
+// 'images' 폴더를 static 파일로 제공
+const imageDir = path.join(__dirname, "images");
+app.use("/images", express.static(imageDir));
+
+app.get("/gallery", (req, res) => {
+  console.log("imageDir: " + imageDir);
+
+  // 이미지 디렉토리에서 파일 목록을 읽음
+  fs.readdir(imageDir, (err, files) => {
+    if (err) {
+      console.error("이미지 파일 목록을 가져오는 데 실패했습니다.", err);
+      return res.status(500).send("서버 오류");
+    }
+
+    // 이미지 파일만 필터링 (jpg, jpeg, png, gif 확장자)
+    const imageFiles = files.filter((file) =>
+      /\.(jpg|jpeg|png|gif)$/i.test(file)
+    );
+
+    console.log("imageFiles" + imageFiles);
+    // 이미지와 매칭되는 텍스트 파일 목록을 함께 반환
+    const imageData = imageFiles.map((imageFile) => {
+      const textFile = path.join(
+        imageDir,
+        imageFile.replace(/\.(jpg|jpeg|png|gif)$/i, ".txt")
+      );
+
+      // 텍스트 파일이 존재하면 읽고, 없으면 빈 텍스트를 사용
+      let textContent = "";
+      if (fs.existsSync(textFile)) {
+        console.log("textContent0" + textContent);
+        textContent = fs.readFileSync(textFile, "utf-8");
+      }
+
+      // 이미지와 해당 텍스트를 매핑하여 반환
+      return {
+        image: imageFile,
+        text: textContent,
+      };
+    });
+
+    // 이미지와 텍스트 데이터를 JSON으로 반환
+    res.json({ gallery: imageData });
+  });
+});
+//port에 접속 성공하면 콜백 함수를 실행시킨다..
 app.listen(port, () => {
   console.log(`server open~~~~  http://localhost:${port}`);
 });

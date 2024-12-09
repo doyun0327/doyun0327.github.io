@@ -37,6 +37,7 @@ function App() {
       // 서버 응답 처리
       if (response.status === 200) {
         alert('업로드 성공!');
+        navigate('/gallery')
       } else {
         alert('업로드 실패!');
       }
