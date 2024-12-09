@@ -1,57 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import  useGallery  from '../hooks/useGallery';
+import { useNavigate } from 'react-router-dom';
 
 const GalleryView = () => {
-  const [galleryData, setGalleryData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { gallery, status, error, loadGalleryData } = useGallery();
+  const navigate = useNavigate();
+  useEffect(()=>{
+    loadGalleryData();
+  },[])
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:4000/gallery')
-      .then((response) => {
-        setGalleryData(response.data.gallery);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('이미지와 텍스트 데이터를 가져오는 데 오류가 발생했습니다.', error);
-        setError('이미지와 텍스트 데이터를 불러오는 데 실패했습니다.');
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <p>로딩 중...</p>;
+  if (status === "loading") {
+    return <div>로딩 중...</div>;
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  if (status === "failed") {
+    return <div>에러 발생: {error}</div>;
   }
 
-  const handleEditClick =() =>{
-    alert('수정')
+
+  const handleDelete = async(image) =>{
+    try {
+      const response = await axios.delete(`http://localhost:4000/gallery/${image}`);
+      if (response.status === 200) {
+        alert('삭제 성공');
+        loadGalleryData();  // 삭제 후 갤러리 데이터 다시 로드
+      }
+    } catch (error) {
+      console.error("삭제 실패:", error);
+      alert("삭제 실패");
+    }
+  }
+
+  const goHome = () =>{
+   navigate('/home')
   }
 
   return (
     <div style={styles.galleryContainer}>
       <h1 style={styles.heading}>Image Gallery</h1>
       <div style={styles.gallery}>
-        {galleryData.length > 0 ? (
-          galleryData.map((item, index) => (
+        {gallery?.length > 0 ? (
+          gallery.map((item, index) => (
             <div key={index} style={styles.imageItem}>
               <img
                 src={`http://localhost:4000/images/${item.image}`}
                 alt={item.image}
                 style={styles.image}
               />
-              <p>{item.text}</p> {/* 텍스트 표시 */}
-              <button   style={styles.editButton}  onClick={() => handleEditClick(index)}>수정</button>
+              <p>{item.text.replace(/^ID: [0-9a-fA-F-]+/, '').trim() }</p>
+              <button   style={styles.editButton}  onClick={() => handleDelete(item.image)}>삭제</button>
             </div>
           ))
         ) : (
           <p>이미지가 없습니다.</p>
         )}
       </div>
+
+      <div><button style={styles.home} onClick={()=>goHome()}>홈</button></div>
     </div>
   );
 };
@@ -106,6 +112,21 @@ const styles = {
     zIndex: "100",      
     marginBottom:"3px"
   },
+  home:{
+    // display: "flex  !import",
+    // justifyContent: "flex-end !import" // 오타 수정
+    marginTop:"10px",
+    justifyContent: "center", // 버튼 내용 중앙 정렬
+    alignItems: "center", // 버튼 내용 세로로 중앙 정렬
+    backgroundColor: "#FFA500", // 파스텔톤 주황색
+    color: "#fff", // 텍스트 색상 흰색
+    border: "none", // 테두리 제거
+    borderRadius: "8px", // 버튼 모서리 둥글게
+    padding: "10px 20px", // 충분한 여백
+    fontSize: "16px", // 적당한 폰트 크기
+    cursor: "pointer", // 커서 모양을 손가락 모양으로 변경
+    transition: "background-color 0.3s ease", // 배경색 전환 애니메이션
+  }
   
 };
 
