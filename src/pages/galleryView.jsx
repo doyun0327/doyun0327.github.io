@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const GalleryView = () => {
   const { gallery, status, error, loadGalleryData } = useGallery();
   const navigate = useNavigate();
+  
   useEffect(()=>{
     loadGalleryData();
   },[])
