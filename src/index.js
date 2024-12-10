@@ -11,7 +11,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import Table from "./pages/login/table";
 import CallBack from "./pages/home/callback";
-import GalleryView from "./pages/galleryView";
+import GalleryView from "./pages/gallery/galleryView";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

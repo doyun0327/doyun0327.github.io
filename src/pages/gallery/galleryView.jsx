@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import  useGallery  from '../hooks/useGallery';
+import  useGallery  from '../../hooks/useGallery';
 import { useNavigate } from 'react-router-dom';
 import { CiEdit } from "react-icons/ci";
-import { useEditGallery } from '../hooks/useGallery';
+import { useEditGallery } from '../../hooks/useGallery';
 import { useSelector } from 'react-redux';
 
 const GalleryView = () => {

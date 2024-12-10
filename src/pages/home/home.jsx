@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { logout } from "../../redux/userSlice";
+import { logout } from "../../slice/userSlice";
 import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';

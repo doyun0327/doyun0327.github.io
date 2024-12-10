@@ -85,7 +85,6 @@ app.get("/protected", (req, res) => {
 // Set up storage engine for multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Define where to store the uploaded images
     // cb(null, "C:/myIntro/doyun0327.github.io/server/images"); // Save images in the "uploads" folder
     cb(null, "./images"); // Save images in the "uploads" folder
   },
@@ -101,7 +100,6 @@ const upload = multer({ storage: storage });
 app.post("/upload", upload.single("image"), (req, res) => {
   try {
     if (!req.file) {
-      console.log("여기여");
       return res.status(400).send("No file uploaded.");
     }
 

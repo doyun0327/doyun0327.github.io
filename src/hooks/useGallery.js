@@ -1,6 +1,6 @@
 // hooks/useGallery.js
 import { useDispatch, useSelector } from "react-redux";
-import { fetchGalleryData, setSeletedImage } from "../redux/gallerySlice";
+import { fetchGalleryData, setSeletedImage } from "../slice/gallerySlice";
 
 // 커스텀 훅
 const useGallery = () => {
