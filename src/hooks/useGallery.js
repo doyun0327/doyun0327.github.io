@@ -26,7 +26,6 @@ export const useEditGallery = () => {
   console.log("dispatch");
 
   return (newState) => {
-    console.log("newState", newState);
     dispatch(setSeletedImage(newState)); // dispatch 실행
   };
 };

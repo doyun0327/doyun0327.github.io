@@ -10,13 +10,15 @@ import * as Yup from 'yup';
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state)=>state.user);
+  const seletedImage = useSelector((state)=>state.gallery.seletedImage.image)
+  const seletedtext = useSelector((state)=>state.gallery.seletedImage.text)
 
+
+console.log('seletedImage'+JSON.stringify(seletedImage))
   const handleLogout= () =>{
     dispatch(logout());
     navigate("/");
   }
-
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const formData = new FormData();
@@ -48,8 +50,8 @@ function App() {
   
     setSubmitting(false);
   };
-  
 
+  
   return (
     <div style={styles.container}>
     {/* 로그아웃 버튼을 화면의 오른쪽 상단에 배치 */}
@@ -63,7 +65,7 @@ function App() {
     </button>
     
     <Formik
-      initialValues={{ text: '', image: null }}
+      initialValues={{ text: seletedtext, image: null }}
       onSubmit={handleSubmit}
     >
       {({ setFieldValue, isSubmitting }) => (
@@ -81,6 +83,8 @@ function App() {
 
           <div style={styles.inputGroup}>
             <label htmlFor="image">이미지 업로드</label>
+            {seletedImage && <img src={`http://localhost:4000/images/${seletedImage}`} alt="Selected" style={{ width: 100 }} />}
+
             <input
               type="file"
               name="image"

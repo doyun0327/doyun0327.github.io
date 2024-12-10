@@ -10,8 +10,7 @@ const GalleryView = () => {
   const { gallery, status, error, loadGalleryData } = useGallery();
   const navigate = useNavigate();
   const editGallery = useEditGallery();
-  const selet = useSelector((state)=>state.gallery.seletedImage)
-  console.log('actions'+JSON.stringify(selet))
+  // const selet = useSelector((state)=>state.gallery.seletedImage)
 
   useEffect(()=>{
     loadGalleryData();
@@ -44,14 +43,9 @@ const GalleryView = () => {
   }
   
 
-  const handleEdit = (image)=>{
-    console.log('handleEdit ' + image);
-    if (image ) {
-       editGallery(image);  // Execute only if image is valid
-    //  navigate("/home");
-    } else {
-      console.log('No image provided');
-    }
+  const handleEdit = async(item)=>{
+      editGallery(item);  // Execute only if image is valid
+        navigate("/home");
   }
 
   return (
@@ -66,7 +60,7 @@ const GalleryView = () => {
                 alt={item.image}
                 style={styles.image}
               />
-              <p>{item.text}<CiEdit onClick={()=>handleEdit(item.image)}></CiEdit></p>
+              <p>{item.text}<CiEdit onClick={()=>handleEdit(item)}></CiEdit></p>
           
               <button   style={styles.editButton}  onClick={() => handleDelete(item.image)}>삭제</button>
             </div>
