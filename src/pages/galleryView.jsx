@@ -4,11 +4,14 @@ import  useGallery  from '../hooks/useGallery';
 import { useNavigate } from 'react-router-dom';
 import { CiEdit } from "react-icons/ci";
 import { useEditGallery } from '../hooks/useGallery';
+import { useSelector } from 'react-redux';
 
 const GalleryView = () => {
   const { gallery, status, error, loadGalleryData } = useGallery();
   const navigate = useNavigate();
   const editGallery = useEditGallery();
+  const selet = useSelector((state)=>state.gallery.seletedImage)
+  console.log('actions'+JSON.stringify(selet))
 
   useEffect(()=>{
     loadGalleryData();

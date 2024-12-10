@@ -27,12 +27,6 @@ export const useEditGallery = () => {
 
   return (newState) => {
     console.log("newState", newState);
-    console.log("type" + typeof newState);
-    if (typeof newState === "string") {
-      console.log("스트링임");
-      dispatch(setSeletedImage(newState)); // dispatch 실행
-    } else {
-      console.log("함수아님");
-    }
+    dispatch(setSeletedImage(newState)); // dispatch 실행
   };
 };
