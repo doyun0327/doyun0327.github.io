@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {jwtDecode} from 'jwt-decode';
-import { setUser } from "../../redux/userSlice";
+import { setUser } from "../../slice/userSlice";
 import { useDispatch } from 'react-redux';
 import api from "../../api/api";
 // 유효성 검사 스키마

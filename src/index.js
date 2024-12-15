@@ -9,20 +9,22 @@ import { store, persistor } from "./redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import Table from './pages/login/table';
-import  CallBack from "./pages/home/callback";
+import Table from "./pages/login/table";
+import CallBack from "./pages/home/callback";
+import GalleryView from "./pages/gallery/galleryView";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-  <Router>
+      <Router>
         <Routes>
-              <Route path="/" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/table" element={<Table />} />
-      <Route path="/call-back" element={<CallBack />} />
-    </Routes>
+          <Route path="/call-back" element={<CallBack />} />
+          <Route path="/gallery" element={<GalleryView />} />
+        </Routes>
       </Router>
     </PersistGate>
   </Provider>
