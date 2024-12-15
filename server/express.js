@@ -5,13 +5,12 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const { Pool } = require('pg');
 //포트 지정
 const port = 4000;
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
-//확인 -  // 이 미들웨어가 있어야 req.body에서 JSON 데이터를 파싱할 수 있습니다.
 app.use(express.json());
-//app.use(cors());
 
 app.use(
   cors({
@@ -21,9 +20,35 @@ app.use(
   })
 );
 
+// PostgreSQL 연결 정보 
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password:process.env.DB_PASSWORD,
+   port : process.env.DB_PORT
+});
+
+// DB 연결 확인
+pool.connect()
+  .then((client) => {
+    console.log('PostgreSQL 데이터베이스에 연결됨!');
+    
+    // 쿼리 실행 (SELECT * FROM member)
+    return client.query('select * from "MEMBER"');
+  })
+  .then((result) => {
+    // 쿼리 결과 확인
+    console.log('쿼리 결과:', result.rows);  // member 테이블의 모든 데이터 출력
+  })
+  .catch((err) => {
+    console.error('PostgreSQL 연결 실패:', err.stack);
+  });
+
 app.get("/", (req, res) => {
   res.send("연결성공");
 });
+
 
 app.post("/login", (req, res) => {
   try {
@@ -32,7 +57,7 @@ app.post("/login", (req, res) => {
 
     if (id === "test" && password === "test") {
       const payload = { id, name: "테스트" };
-      const accessToken = jwt.sign(payload, secretKey, { expiresIn: "1h" });
+      const accessToken = jwt.sign(payload, secretKey, { expiresIn: "5s" });
 
       // 리프레시 토큰 생성 (유효 기간 7일)
       const refreshToken = jwt.sign(payload, refreshSecretKey, {
@@ -52,6 +77,41 @@ app.post("/login", (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+//get-date
+
+app.get("/get-date", (req, res) => {
+  try {
+    const currentDate = new Date().toLocaleString();  // 현재 날짜 및 시간
+    res.status(200).json({ date: currentDate });
+  } catch (error) {
+    console.error("Error occurred:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Refresh Token을 이용한 새로운 Access Token 발급
+app.post("/refresh-token", (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(400).json({ message: "Refresh token is required" });
+  }
+
+  // Refresh Token을 검증
+  jwt.verify(refreshToken, refreshSecretKey, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired refresh token" });
+    }
+
+    // 리프레시 토큰이 유효한 경우 새로운 access token 발급
+    const payload = { id: decoded.id, name: decoded.name };
+    const newAccessToken = jwt.sign(payload, secretKey, { expiresIn: "1h" });
+
+    res.json({ accessToken: newAccessToken });
+  });
+});
+
 
 // 이게 미들웨어가 될 계획
 app.get("/protected", (req, res) => {

@@ -4,7 +4,7 @@ import axios from "axios";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { logout } from "../../redux/userSlice";
-
+import api from "../../api/api";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -12,7 +12,17 @@ function App() {
 
   const handleLogout= () =>{
     dispatch(logout());
+    localStorage.removeItem("accessToken"); // 액세스 토큰 삭제
+    localStorage.removeItem("refreshToken"); // 리프레시 토큰 삭제
     navigate("/");
+  }
+
+  const handleGetDate =async () =>{
+    const response = await api.get('http://localhost:4000/get-date');
+
+    if (response.status === 200) {
+      alert(response.data.date)
+    }
   }
 
   return (
@@ -26,6 +36,8 @@ function App() {
     </header>
 
     <p style={styles.text}>여기에서 저에 대해 소개하겠어요!! 또찌는 자요ㅋㅋ!</p>
+
+    <button onClick={handleGetDate } >ddddclickdate </button>
   </div>
   );
 }
