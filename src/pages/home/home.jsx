@@ -3,10 +3,11 @@ import axios from "axios";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { logout } from "../../slice/userSlice";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import api from "../../api/api";
+import { getAccessToken } from "../../utils/auth";
 
 function App() {
   const navigate = useNavigate();
@@ -56,16 +57,42 @@ console.log('seletedImage'+JSON.stringify(seletedImage))
 
   
 
-  const handleGetDate =async () =>{
-    const response = await api.get('http://localhost:4000/get-date');
+function getRemainingTime(token) {
+  const payload = JSON.parse(atob(token.split('.')[1]));
 
-    if (response.status === 200) {
-      alert(response.data.date)
-    }
+  const expTime = payload.exp * 1000; // exp는 초 단위, 밀리초로 변환
+  const currentTime = Date.now();
+
+  const remainingTime = expTime - currentTime; // 남은 시간 (밀리초 단위)
+
+  // 남은 시간을 시, 분, 초로 변환
+  if (remainingTime <= 0) {
+    return '토큰 만료';
   }
+
+  const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+  const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+  return `${hours}시간 ${minutes}분 ${seconds}초`;
+}
+
+const accessToekn = getAccessToken();
+const [tokenExpireTime,setTokenExpireTime] = useState('');
+useEffect(()=>{
+  if (accessToekn) {
+    // 1초마다 남은 시간을 갱신하여 화면에 표시
+    setInterval(() => {
+      const remainingTime = getRemainingTime(accessToekn);
+      setTokenExpireTime(remainingTime)
+    }, 1000); // 1000ms = 1초마다 실행
+  }
+},[accessToekn])
+
 
   return (
     <div style={styles.container}>
+    <div>{tokenExpireTime}</div>
     {/* 로그아웃 버튼을 화면의 오른쪽 상단에 배치 */}
     <button
       onClick={handleLogout}

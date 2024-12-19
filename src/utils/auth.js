@@ -34,7 +34,6 @@ export const refreshAccessToken = async () => {
       refreshToken,
     });
     const { accessToken } = response.data;
-    alert(response?.data);
     console.log("리프레시로 만들어진 토큰 " + accessToken);
     localStorage.setItem("accessToken", accessToken);
     return accessToken;

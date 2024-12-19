@@ -63,7 +63,7 @@ app.post("/login", (req, res) => {
       const accessToken = jwt.sign(payload, secretKey, { expiresIn: "5s" });
 
       const refreshToken = jwt.sign(payload, refreshSecretKey, {
-        expiresIn: "8s",
+        expiresIn: "30m",
       });
 
       res.json({
@@ -74,18 +74,6 @@ app.post("/login", (req, res) => {
     } else {
       res.json({ message: "Invalid credentials" });
     }
-  } catch (error) {
-    console.error("Error occurred:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-//get-date
-
-app.get("/get-date", (req, res) => {
-  try {
-    const currentDate = new Date().toLocaleString(); // 현재 날짜 및 시간
-    res.status(200).json({ date: currentDate });
   } catch (error) {
     console.error("Error occurred:", error);
     res.status(500).json({ message: "Server error" });
@@ -111,7 +99,7 @@ app.post("/refresh-token", (req, res) => {
 
     // 리프레시 토큰이 유효한 경우 새로운 access token 발급
     const payload = { id: decoded.id, name: decoded.name };
-    const newAccessToken = jwt.sign(payload, secretKey, { expiresIn: "1s" });
+    const newAccessToken = jwt.sign(payload, secretKey, { expiresIn: "24h" });
     console.log("리프래시토큰 발급완료");
     res.json({ accessToken: newAccessToken });
   });
@@ -195,8 +183,6 @@ app.get("/gallery", (req, res) => {
     const imageFiles = files.filter((file) =>
       /\.(jpg|jpeg|png|gif)$/i.test(file)
     );
-
-    console.log("imageFiles:", imageFiles);
 
     // 이미지와 매칭되는 텍스트 파일 목록을 함께 반환
     const imageData = imageFiles.map((imageFile) => {

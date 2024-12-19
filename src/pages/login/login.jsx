@@ -52,7 +52,7 @@ const Login = () => {
     };
 
     try {
-      const response = await api.post("http://localhost:4000/login", data, {
+      const response = await axios.post("http://localhost:4000/login", data, {
         headers: {
           "Content-Type": "application/json",
         },

@@ -32,7 +32,10 @@ api.interceptors.request.use(
         return config;
       } catch (error) {
         console.error("Failed to refresh access token:", error);
-        //alert("토큰갱신실패"); // 갱신 실패시 로그인 페이지로 리디렉션하거나 에러처리
+        alert("토큰갱신실패"); // 갱신 실패시 로그인 페이지로 리디렉션하거나 에러처리
+        window.location.href = "/";
+
+        return Promise.reject(error);
       }
     }
 
