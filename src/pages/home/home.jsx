@@ -8,6 +8,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import api from "../../api/api";
 import { getAccessToken } from "../../utils/auth";
+import { CiClock2  } from "react-icons/ci";
 
 function App() {
   const navigate = useNavigate();
@@ -89,20 +90,21 @@ useEffect(()=>{
   }
 },[accessToekn])
 
+return (
+  <div style={styles.container}>
+    <div style={styles.tokenExpireTimeContainer}>
+    <CiClock2 size={20} />
+      <div style={styles.tokenExpireTime}>  {tokenExpireTime}</div>
+      <button
+        onClick={handleLogout}
+        style={styles.logoutButton}
+        onMouseEnter={(e) => (e.target.style.backgroundColor = '#e84e31')} // 호버 효과
+        onMouseLeave={(e) => (e.target.style.backgroundColor = '#ff6347')} // 기본 색으로 돌아오기
+      >
+        로그아웃
+      </button>
+    </div>
 
-  return (
-    <div style={styles.container}>
-    <div>{tokenExpireTime}</div>
-    {/* 로그아웃 버튼을 화면의 오른쪽 상단에 배치 */}
-    <button
-      onClick={handleLogout}
-      style={styles.logoutButton}
-      onMouseEnter={(e) => (e.target.style.backgroundColor = '#e84e31')} // 호버 효과
-      onMouseLeave={(e) => (e.target.style.backgroundColor = '#ff6347')} // 기본 색으로 돌아오기
-    >
-      로그아웃
-    </button>
-    
     <Formik
       initialValues={{ text: seletedtext, image: null }}
       onSubmit={handleSubmit}
@@ -110,19 +112,19 @@ useEffect(()=>{
       {({ setFieldValue, isSubmitting }) => (
         <Form style={styles.form}>
           <div style={styles.inputGroup}>
-            <label htmlFor="text">텍스트</label>
+            <label htmlFor="text" style={styles.inputLabel}>텍스트</label>
             <Field
               type="text"
               name="text"
               placeholder="텍스트를 입력하세요"
               style={styles.input}
             />
-            <ErrorMessage name="text" component="div" style={styles.error} />
+            <ErrorMessage name="text" component="div" style={styles.errorMessage} />
           </div>
 
           <div style={styles.inputGroup}>
-            <label htmlFor="image">이미지 업로드</label>
-            {seletedImage && <img src={`http://localhost:4000/images/${seletedImage}`} alt="Selected" style={{ width: 100 }} />}
+            <label htmlFor="image" style={styles.inputLabel}>이미지 업로드</label>
+            {seletedImage && <img src={`http://localhost:4000/images/${seletedImage}`} alt="Selected" style={styles.imagePreview} />}
 
             <input
               type="file"
@@ -133,10 +135,10 @@ useEffect(()=>{
               }}
               style={styles.fileInput}
             />
-            <ErrorMessage name="image" component="div" style={styles.error} />
+            <ErrorMessage name="image" component="div" style={styles.errorMessage} />
           </div>
 
-          <button type="submit" style={styles.button} disabled={isSubmitting}>
+          <button type="submit" style={styles.submitButton} disabled={isSubmitting}>
             {isSubmitting ? '업로드 중...' : '업로드'}
           </button>
         </Form>
@@ -152,94 +154,155 @@ useEffect(()=>{
       게시판 바로가기
     </button>
   </div>
-  )
+)
+
+
 }
 
 const styles = {
+  // 전체 컨테이너
   container: {
-    padding: '20px',
-    maxWidth: '600px',
-    margin: '0 auto',
-    backgroundColor: '#f8f8f8',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  
-  },
-  button: {
-    backgroundColor: '#FFA500', // 주황색 버튼
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor: '#1c1c1c',
     color: '#fff',
+    fontFamily: 'Arial, sans-serif',
+    padding: '20px',
+  },
+
+  // 토큰 만료 시간과 로그아웃 버튼을 일렬로 배치할 컨테이너
+  tokenExpireTimeContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: '500px', // 너비를 적당히 제한
+    marginBottom: '20px',
+    gap:'10px'
+  },
+
+  // 토큰 만료 시간 스타일
+  tokenExpireTime: {
+    fontSize: '14px',
+    color: '#ddd',
+  },
+
+  // 로그아웃 버튼 스타일
+  logoutButton: {
+    backgroundColor: '#ff6347',
     border: 'none',
-    borderRadius: '5px',
+    color: 'white',
     padding: '10px 20px',
-    fontSize: '16px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
-    margin: '10px 0', // 상하 여백
+    borderRadius: '5px',
   },
-  buttonHover: {
-    backgroundColor: '#ff7f50', // 호버 시 색상 변경
-  },
+
+  // 폼 스타일
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px', // 각 항목 사이에 간격 추가
+    gap: '20px',
+    width: '300px',
+    backgroundColor: '#333',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   },
+
+  // 입력 그룹
   inputGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '5px',
   },
+
+  // 레이블 스타일
+  inputLabel: {
+    marginBottom: '8px',
+    fontSize: '14px',
+    color: '#ccc',
+  },
+
+  // 입력 필드
   input: {
     padding: '10px',
     fontSize: '16px',
+    border: '1px solid #555',
     borderRadius: '5px',
-    border: '1px solid #ddd',
-    outline: 'none',
-    transition: 'border-color 0.3s ease',
+    backgroundColor: '#444',
+    color: '#fff',
+    marginBottom: '10px',
   },
-  inputFocus: {
-    borderColor: '#FFA500', // 포커스 시 주황색 테두리
-  },
+
+  // 파일 입력 필드
   fileInput: {
     padding: '10px',
     fontSize: '16px',
+    border: '1px solid #555',
     borderRadius: '5px',
-    border: '1px solid #ddd',
+    backgroundColor: '#444',
+    color: '#fff',
+    marginBottom: '10px',
   },
-  error: {
+
+  // 에러 메시지
+  errorMessage: {
     color: 'red',
-    fontSize: '14px',
+    fontSize: '12px',
     marginTop: '5px',
   },
-  logoutButton: {
-    position: 'absolute',
-    top: '20px',
-    right: '20px',
-    backgroundColor: '#ff6347', // 토마토 색상
-    color: '#fff',
+
+  // 이미지 미리보기
+  imagePreview: {
+    width: '100px',
+    margin: '10px 0',
+  },
+
+  // 업로드 버튼
+  submitButton: {
+    backgroundColor: '#ffc800',
+    color: 'white',
+    padding: '10px',
+    fontSize: '16px',
     border: 'none',
     borderRadius: '5px',
-    padding: '8px 15px',
     cursor: 'pointer',
-    fontSize: '14px',
     transition: 'background-color 0.3s ease',
   },
-  logoutButtonHover: {
-    backgroundColor: '#e84e31', // 로그아웃 버튼 호버 효과
+
+  // 비활성화된 버튼 스타일
+  submitButtonDisabled: {
+    backgroundColor: '#777',
+    cursor: 'not-allowed',
   },
+
+  // 업로드 버튼 호버 효과
+  submitButtonHover: {
+    backgroundColor: '#e84e31',
+  },
+
+  // 바로가기 버튼
   navigateButton: {
-    backgroundColor: '#00bfff', // 하늘색
-    color: '#fff',
-    padding: '10px 20px',
-    borderRadius: '5px',
+    backgroundColor: '#00bfff',
+    color: 'white',
+    padding: '10px',
     fontSize: '16px',
+    border: 'none',
+    borderRadius: '5px',
     cursor: 'pointer',
-    marginTop: '15px',
     transition: 'background-color 0.3s ease',
+    marginTop:'20px'
   },
+
+  // 바로가기 버튼 호버 효과
   navigateButtonHover: {
-    backgroundColor: '#009acd', // 게시판 바로가기 버튼 호버 효과
+    backgroundColor: '#009acd',
   },
 };
+
+
 
 export default App;

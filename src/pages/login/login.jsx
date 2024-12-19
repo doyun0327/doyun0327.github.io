@@ -87,7 +87,7 @@ const Login = () => {
 
   return (
     <div style={styles.container}>
-      <h2>로그인</h2>
+      <h2 style={styles.title}>로그인</h2>
       <Formik
         initialValues={{ id: "", password: "" }}
         validationSchema={validationSchema}
@@ -96,33 +96,25 @@ const Login = () => {
         {({ isSubmitting }) => (
           <Form style={styles.form}>
             <div style={styles.inputGroup}>
-              <label htmlFor="id">ID</label>
+              <label htmlFor="id" style={styles.label}>ID</label>
               <Field
                 type="text"
                 name="id"
                 placeholder="아이디를 입력하세요"
                 style={styles.input}
               />
-              <ErrorMessage
-                name="id"
-                component="div"
-                style={styles.error}
-              />
+              <ErrorMessage name="id" component="div" style={styles.error} />
             </div>
 
             <div style={styles.inputGroup}>
-              <label htmlFor="password">PW</label>
+              <label htmlFor="password" style={styles.label}>PW</label>
               <Field
                 type="password"
                 name="password"
                 placeholder="비밀번호를 입력하세요"
                 style={styles.input}
               />
-              <ErrorMessage
-                name="password"
-                component="div"
-                style={styles.error}
-              />
+              <ErrorMessage name="password" component="div" style={styles.error} />
             </div>
 
             <button type="submit" style={styles.button} disabled={isSubmitting}>
@@ -143,45 +135,66 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
-    backgroundColor: "#f7f9fc",
+    backgroundColor: "#f7f7f7", // 부드러운 베이지색 배경
+    fontFamily: "'Arial', sans-serif",
+  },
+  title: {
+    color: "#34495e", // 짙은 회색 (헤더 텍스트)
+    fontSize: "2rem",
+    marginBottom: "20px",
   },
   form: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "300px",
-    padding: "2rem",
-    border: "1px solid #ddd",
+    width: "300px", // 폼 너비 설정
+    backgroundColor: "#ffffff", // 흰색 배경
     borderRadius: "8px",
-    backgroundColor: "#fff",
+    padding: "30px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
   },
   inputGroup: {
-    marginBottom: "1rem",
     width: "100%",
+    marginBottom: "15px",
+  },
+  label: {
+    color: "#34495e", // 라벨 색 (어두운 회색)
+    marginBottom: "8px",
+    fontSize: "1rem",
   },
   input: {
     width: "100%",
-    padding: "0.5rem",
-    fontSize: "1rem",
+    padding: "10px",
+    border: "1px solid #dcdcdc", // 연한 회색 테두리
     borderRadius: "4px",
-    border: "1px solid #ddd",
+    fontSize: "1rem",
+    backgroundColor: "#ecf0f1", // 입력창 배경색 (연한 회색)
+    color: "#34495e", // 입력 글자색
+    outline: "none",
+    transition: "border 0.3s",
+  },
+  inputFocus: {
+    borderColor: "#27ae60", // 입력창 포커스시 초록색 테두리
   },
   button: {
     width: "100%",
-    padding: "0.75rem",
-    fontSize: "1rem",
-    borderRadius: "4px",
+    padding: "12px",
+    backgroundColor: "#27ae60", // 초록색 버튼
     border: "none",
-    backgroundColor: "#007bff",
-    color: "#fff",
+    borderRadius: "4px",
+    fontSize: "1.1rem",
+    color: "#ffffff", // 버튼 텍스트 색상
     cursor: "pointer",
+    transition: "background-color 0.3s",
+  },
+  buttonHover: {
+    backgroundColor: "#2ecc71", // 버튼 호버시 색상 변경
   },
   error: {
-    color: "red",
-    fontSize: "0.875rem",
+    color: "#e74c3c", // 에러 메시지 색상 (붉은색)
+    fontSize: "0.9rem",
     marginTop: "5px",
   },
 };
-
 export default Login;
 
