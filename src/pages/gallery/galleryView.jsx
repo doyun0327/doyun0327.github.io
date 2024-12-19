@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { CiEdit } from "react-icons/ci";
 import { useEditGallery } from '../../hooks/useGallery';
 import { useSelector } from 'react-redux';
-
+import api from "../../api/api";
 const GalleryView = () => {
   const { gallery, status, error, loadGalleryData } = useGallery();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const GalleryView = () => {
 
   const handleDelete = async(image) =>{
     try {
-      const response = await axios.delete(`http://localhost:4000/gallery/${image}`);
+      const response = await api.delete(`http://localhost:4000/gallery/${image}`);
       if (response.status === 200) {
         alert('삭제 성공');
         loadGalleryData();  // 삭제 후 갤러리 데이터 다시 로드

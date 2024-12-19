@@ -6,8 +6,8 @@ import { logout } from "../../slice/userSlice";
 import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-
 import api from "../../api/api";
+
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ console.log('seletedImage'+JSON.stringify(seletedImage))
   
     try {
       // axios를 사용한 POST 요청
-      const response = await axios.post('http://localhost:4000/upload', formData, {
+      const response = await api.post('http://localhost:4000/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // axios는 자동으로 처리하지만, 명시적으로 설정할 수도 있음
         },
