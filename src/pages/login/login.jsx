@@ -7,6 +7,7 @@ import {jwtDecode} from 'jwt-decode';
 import { setUser } from "../../slice/userSlice";
 import { useDispatch } from 'react-redux';
 import api from "../../api/api";
+import { useEditGallery } from "../../hooks/useGallery";
 // 유효성 검사 스키마
 const validationSchema = Yup.object({
   id: Yup.string().required("아이디를 입력하세요"),
@@ -16,33 +17,7 @@ const validationSchema = Yup.object({
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
-  const fetchData = async () => {
-    const token = localStorage.getItem("token"); 
-
-    if (!token) {
-      navigate("/"); 
-      return;
-    }
-
-    try {
-      // axios로 요청 보내기
-      const response = await axios.get("http://localhost:4000/protected", {
-        headers: {
-         // "Accept": "application/json", //axios는 안해두댐 자동
-          "Authorization": `Bearer ${token}`, // Authorization 헤더에 토큰 포함
-        },
-      });
-
-      // 응답이 성공적이면 데이터 처리
-      localStorage.setItem("token",response?.data?.result?.id);
-    } catch (error) {
-      alert("error: " + error.message);
-      navigate("/"); 
-    }
-  };
-
+  const editGallery = useEditGallery();
 
 
   const handleLogin = async (values, { setSubmitting, setFieldError }) => {
@@ -66,11 +41,9 @@ const Login = () => {
         localStorage.setItem("refreshToken", refreshToken);
        
         const decodedToken = jwtDecode(accessToken);
-        console.log('accesstoekn:'+JSON.stringify(decodedToken));
-        console.log('accesstorefreshTokenekn:'+JSON.stringify(jwtDecode(refreshToken)))
         const userName = decodedToken.name;
         dispatch(setUser({ id: decodedToken.id, name: userName }));
-  
+        editGallery('')
         navigate("/home");
       } else {
         alert(response?.data?.message);

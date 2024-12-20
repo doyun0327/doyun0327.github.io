@@ -44,8 +44,8 @@ const GalleryView = () => {
   
 
   const handleEdit = async(item)=>{
-      editGallery(item);  // Execute only if image is valid
-        navigate("/home");
+      editGallery(item);  
+      navigate("/home");
   }
 
   return (
