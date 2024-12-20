@@ -1,6 +1,6 @@
 // hooks/useGallery.js
 import { useDispatch, useSelector } from "react-redux";
-import { fetchGalleryData, setSeletedImage } from "../slice/gallerySlice";
+import { fetchGalleryData, setSeletedGallery } from "../slice/gallerySlice";
 
 // 커스텀 훅
 const useGallery = () => {
@@ -23,9 +23,8 @@ export default useGallery;
 
 export const useEditGallery = () => {
   const dispatch = useDispatch();
-  console.log("dispatch");
 
   return (newState) => {
-    dispatch(setSeletedImage(newState)); // dispatch 실행
+    dispatch(setSeletedGallery(newState));
   };
 };
