@@ -6,11 +6,27 @@ import { CiEdit } from "react-icons/ci";
 import { useEditGallery } from '../../hooks/useGallery';
 import { useSelector } from 'react-redux';
 import api from "../../api/api";
+import Modal  from '../../common/modal';
+import YesNoModal from '../../common/yesNoModal';
+
 const GalleryView = () => {
   const { gallery, status, error, loadGalleryData } = useGallery();
   const navigate = useNavigate();
   const editGallery = useEditGallery();
   // const selet = useSelector((state)=>state.gallery.seletedImage)
+  const [openModal, setOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  const handleConfirm = () => {
+    // 삭제 또는 다른 동작 수행
+    console.log('삭제 확인');
+    setOpenModal(false);  // 모달 닫기
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);  // 모달 닫기
+  };
+
 
   useEffect(()=>{
     loadGalleryData();
@@ -24,17 +40,21 @@ const GalleryView = () => {
     return <div>에러 발생: {error}</div>;
   }
 
-
   const handleDelete = async(image) =>{
+    //삭제확인
+    setModalMessage('정말 삭제 하시겠습니까?');
     try {
       const response = await api.delete(`http://localhost:4000/gallery/${image}`);
       if (response.status === 200) {
-        alert('삭제 성공');
+ 
+        setOpenModal(true);  // 모달 열기
         loadGalleryData();  // 삭제 후 갤러리 데이터 다시 로드
       }
     } catch (error) {
       console.error("삭제 실패:", error);
       alert("삭제 실패");
+      setModalMessage('삭제 실패');
+      setOpenModal(true);  // 실패 시에도 모달 열기
     }
   }
 
@@ -45,11 +65,25 @@ const GalleryView = () => {
 
   const handleEdit = async(item)=>{
       editGallery(item);  
-      navigate("/home");
+      navigate("/edit");
   }
 
   return (
     <div style={styles.galleryContainer}>
+
+        {/* 모달 컴포넌트 */}
+        {/* <Modal  
+        open={openModal} 
+        onClose={handleClose} 
+        message={modalMessage} 
+      /> */}
+
+      <YesNoModal 
+        open={openModal} 
+        onClose={handleClose} 
+        onConfirm={handleConfirm} 
+        message={modalMessage} 
+      />
       <h1 style={styles.heading}>Image Gallery</h1>
       <div style={styles.gallery}>
         {gallery?.length > 0 ? (

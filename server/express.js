@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000", // 허용할 출처
-    methods: ["GET", "POST", "DELETE"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true, // 쿠키를 포함하여 요청
   })
 );
@@ -239,6 +239,147 @@ app.delete("/gallery/:filename", (req, res) => {
   });
 });
 
+// 이미지 및 텍스트 수정 API
+app.put("/edit/:filename", upload.single("image"), (req, res) => {
+  const { filename } = req.params; // URL 파라미터로 받은 기존 파일명
+  const { text } = req.body; // 수정된 텍스트 (폼 데이터로 받아옴)
+
+  // 기존 이미지 및 텍스트 파일 경로 설정
+  const imagePath = path.join(imageDir, filename); // 기존 이미지 경로
+  const textFilePath = path.join(
+    imageDir,
+    filename.replace(/\.(jpg|jpeg|png|gif)$/i, ".txt")
+  ); // 기존 텍스트 파일 경로
+
+  // 1. 텍스트만 수정한 경우
+  if (!req.file && text) {
+    // 이미지 파일이 없고 텍스트만 존재하는 경우
+    fs.writeFile(textFilePath, text, (err) => {
+      if (err) {
+        console.error("텍스트 파일 저장 실패:", err);
+        return res.status(500).send("텍스트 파일 저장 실패");
+      }
+      res.status(200).send("텍스트 파일이 수정되었습니다.");
+    });
+    return;
+  }
+
+  // 2. 이미지만 수정한 경우
+  if (req.file && !text) {
+    // 이미지 파일이 있고 텍스트가 없는 경우
+    const newImagePath = path.join(imageDir, req.file.filename); // 새 이미지 파일 경로
+    fs.rename(req.file.path, newImagePath, (err) => {
+      if (err) {
+        console.error("새 이미지 저장 실패:", err);
+        return res.status(500).send("새 이미지 저장 실패");
+      }
+      res.status(200).send("이미지 파일이 수정되었습니다.");
+    });
+    return;
+  }
+
+  // 3. 이미지와 텍스트 둘 다 수정한 경우
+  // 기존 이미지 삭제
+  fs.unlink(imagePath, (err) => {
+    if (err) {
+      console.error("기존 이미지 삭제 실패:", err);
+      return res.status(500).send("기존 이미지 삭제 실패");
+    }
+
+    // 기존 텍스트 파일 삭제
+    fs.unlink(textFilePath, (err) => {
+      if (err) {
+        console.error("기존 텍스트 파일 삭제 실패:", err);
+        return res.status(500).send("기존 텍스트 파일 삭제 실패");
+      }
+
+      // 새로운 이미지 업로드 (req.file는 업로드된 새 이미지)
+      const newImagePath = path.join(imageDir, req.file.filename); // 새 이미지 파일 경로
+      fs.rename(req.file.path, newImagePath, (err) => {
+        if (err) {
+          console.error("새 이미지 저장 실패:", err);
+          return res.status(500).send("새 이미지 저장 실패");
+        }
+
+        // 텍스트 파일 저장 (텍스트가 있는 경우에만)
+        if (text) {
+          const newTextFilePath = path.join(
+            imageDir,
+            req.file.filename.replace(/\.(jpg|jpeg|png|gif)$/i, ".txt")
+          ); // 새 텍스트 파일 경로
+          fs.writeFile(newTextFilePath, text, (err) => {
+            if (err) {
+              console.error("텍스트 파일 저장 실패:", err);
+              return res.status(500).send("텍스트 파일 저장 실패");
+            }
+
+            // 성공적으로 수정이 완료되었음을 응답
+            res.status(200).send("이미지와 텍스트 파일이 수정되었습니다.");
+          });
+        } else {
+          // 텍스트 없이 이미지만 수정한 경우
+          res.status(200).send("이미지 수정만 완료되었습니다.");
+        }
+      });
+    });
+  });
+});
+
+// app.put("/edit/:filename", upload.single("image"), (req, res) => {
+//   const { filename } = req.params; // URL 파라미터로 받은 기존 파일명
+//   const imagePath = path.join(imageDir, filename); // 기존 이미지 파일 경로
+//   const textFilePath = path.join(
+//     imageDir,
+//     filename.replace(/\.(jpg|jpeg|png|gif)$/i, ".txt")
+//   ); // 기존 텍스트 파일 경로
+
+//   // 기존 이미지 삭제
+//   fs.unlink(imagePath, (err) => {
+//     if (err) {
+//       console.error("기존 이미지 삭제 실패:", err);
+//       return res.status(500).send("기존 이미지 삭제 실패");
+//     }
+
+//     // 기존 텍스트 파일 삭제
+//     fs.unlink(textFilePath, (err) => {
+//       if (err) {
+//         console.error("기존 텍스트 파일 삭제 실패:", err);
+//         return res.status(500).send("기존 텍스트 파일 삭제 실패");
+//       }
+
+//       // 새 이미지 파일과 텍스트 파일 저장
+//       const newImagePath = path.join(imageDir, req.file.filename); // 새 이미지 파일 경로
+//       const newTextFilePath = path.join(
+//         imageDir,
+//         req.file.filename.replace(/\.(jpg|jpeg|png|gif)$/i, ".txt")
+//       ); // 새 텍스트 파일 경로
+
+//       // 새 이미지 파일 저장
+//       fs.rename(req.file.path, newImagePath, (err) => {
+//         if (err) {
+//           console.error("새 이미지 저장 실패:", err);
+//           return res.status(500).send("새 이미지 저장 실패");
+//         }
+
+//         // 새 텍스트 파일 저장 (텍스트는 `req.body.text`로 받는다)
+//         if (req.body.text) {
+//           fs.writeFile(newTextFilePath, req.body.text, (err) => {
+//             if (err) {
+//               console.error("텍스트 파일 저장 실패:", err);
+//               return res.status(500).send("텍스트 파일 저장 실패");
+//             }
+
+//             // 성공적으로 수정이 완료되었음을 응답
+//             res.status(200).send("이미지 및 텍스트 파일이 수정되었습니다.");
+//           });
+//         } else {
+//           // 텍스트 없이 이미지만 수정한 경우
+//           res.status(200).send("이미지만 수정되었습니다.");
+//         }
+//       });
+//     });
+//   });
+// });
 //port에 접속 성공하면 콜백 함수를 실행시킨다..
 app.listen(port, () => {
   console.log(`server open~~~~  http://localhost:${port}`);

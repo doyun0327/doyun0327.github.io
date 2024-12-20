@@ -106,7 +106,7 @@ return (
     </div>
 
     <Formik
-      initialValues={{ text: seletedtext, image: null }}
+      initialValues={{ text: '', image: null }}
       onSubmit={handleSubmit}
     >
       {({ setFieldValue, isSubmitting }) => (
@@ -124,7 +124,7 @@ return (
 
           <div style={styles.inputGroup}>
             <label htmlFor="image" style={styles.inputLabel}>이미지 업로드</label>
-            {seletedImage && <img src={`http://localhost:4000/images/${seletedImage}`} alt="Selected" style={styles.imagePreview} />}
+            {/* {seletedImage && <img src={`http://localhost:4000/images/${seletedImage}`} alt="Selected" style={styles.imagePreview} />} */}
 
             <input
               type="file"
