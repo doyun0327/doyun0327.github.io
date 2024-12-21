@@ -22,7 +22,7 @@ app.use(
   cors({
     origin: ['http://localhost:6500', 'http://localhost:3000'], // 클라이언트 출처
     methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
-    credentials: true, // 쿠키를 포함한 요청을 허용
+    // credentials: true, // 쿠키를 포함한 요청을 허용
   })
 );
 
