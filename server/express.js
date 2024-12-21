@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // 허용할 출처
+    origin: ['http://localhost:6500', 'http://localhost:3000'],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true, // 쿠키를 포함하여 요청
   })
