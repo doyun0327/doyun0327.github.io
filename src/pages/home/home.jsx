@@ -9,12 +9,14 @@ import * as Yup from 'yup';
 import api from "../../api/api";
 import { getAccessToken } from "../../utils/auth";
 import { CiClock2  } from "react-icons/ci";
+import SuccessAlert from "../../common/successAlert";
 
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const seletedImage = useSelector((state)=>state.gallery.seletedImage.image)
   const seletedtext = useSelector((state)=>state.gallery.seletedImage.text)
+  const [alertMessage, setAlertMessage] = useState('');
 
 
 console.log('seletedImage'+JSON.stringify(seletedImage))
@@ -43,8 +45,16 @@ console.log('seletedImage'+JSON.stringify(seletedImage))
   
       // 서버 응답 처리
       if (response.status === 200) {
-        alert('업로드 성공!');
-        navigate('/gallery')
+        setAlertMessage('업로드가 완료되었습니다.');
+          
+              
+          // 일정 시간 후 알림 메시지를 초기화
+          setTimeout(() => {
+            setAlertMessage('');
+            navigate('/gallery')
+
+          }, 1000);  // 3초 후 알림 메시지를 초기화
+     
       } else {
         alert('업로드 실패!');
       }
@@ -92,6 +102,10 @@ useEffect(()=>{
 
 return (
   <div style={styles.container}>
+
+{alertMessage && <SuccessAlert message={alertMessage} />}
+
+
     <div style={styles.tokenExpireTimeContainer}>
     <CiClock2 size={20} />
       <div style={styles.tokenExpireTime}>  {tokenExpireTime}</div>

@@ -7,6 +7,7 @@ import Modal  from '../../common/modal';
 import YesNoModal from '../../common/yesNoModal';
 import useGallery from '../../hooks/useGallery';
 import { useEditGallery } from '../../hooks/useGallery';
+import SuccessAlert from '../../common/successAlert';
 
 const GalleryView = () => {
   const { gallery, status, error, loadGalleryData } = useGallery();
@@ -15,6 +16,7 @@ const GalleryView = () => {
   const [openModal, setOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [imageToDelete, setImageToDelete] = useState(null); // 삭제할 이미지 상태 추가
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     loadGalleryData();
@@ -41,7 +43,15 @@ const GalleryView = () => {
         const response = await api.delete(`http://localhost:4000/gallery/${imageToDelete}`);
         if (response.status === 200) {
           setOpenModal(false);  // 삭제 성공 후 모달 닫기
+          setAlertMessage('삭제가 완료되었습니다.');
+          
+          // 일정 시간 후 알림 메시지를 초기화
+          setTimeout(() => {
+            setAlertMessage('');
+          }, 2000);  // 3초 후 알림 메시지를 초기화
+  
           loadGalleryData();  // 갤러리 데이터 다시 로드
+
         }
       } catch (error) {
         console.error("삭제 실패:", error);
@@ -74,6 +84,9 @@ const GalleryView = () => {
         onConfirm={handleConfirmDelete} 
         message={modalMessage} 
       />
+
+      
+    {alertMessage && <SuccessAlert message={alertMessage} />}
 
       <h1 style={styles.heading}>Image Gallery</h1>
       <div style={styles.gallery}>

@@ -4,6 +4,7 @@ import api from '../../api/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setSeletedGallery } from '../../slice/gallerySlice'; // 수정된 이미지를 리덕스에 저장하는 액션
+import SuccessAlert from '../../common/successAlert';
 
 function GalleryEditView() {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ function GalleryEditView() {
   const seletedImage = useSelector((state) => state.gallery.seletedGallery.image);
   const seletedText = useSelector((state) => state.gallery.seletedGallery.text);
   const [imagePreview, setImagePreview] = useState(null);
+  const [alertMessage, setAlertMessage] = useState('');
 
   // 처음에 수정하려는 이미지가 있을 경우 미리보기 설정
   useEffect(() => {
@@ -33,10 +35,13 @@ function GalleryEditView() {
       });
   
       if (response.status === 200) {
-        alert('이미지 및 텍스트 수정 성공!');
+        setAlertMessage('성공적으로 작업을 완료했습니다!');
         // 업로드 후 상태 초기화
         dispatch(setSeletedGallery({ image: null, text: '' }));
+      // 알림이 표시된 후 페이지 전환
+      setTimeout(() => {
         navigate('/gallery');
+      }, 1000);  // 2초 후에 페이지 전환
       } else {
         alert('이미지 수정 실패!');
       }
@@ -50,6 +55,8 @@ function GalleryEditView() {
   
   return (
     <div style={styles.container}>
+
+{alertMessage && <SuccessAlert message={alertMessage} />}
       <Formik
         initialValues={{ text: seletedText, image: null }}
         onSubmit={handleSubmit}
