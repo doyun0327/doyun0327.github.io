@@ -20,8 +20,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: function (origin, callback) {
-      // 요청이 http://localhost:6500 또는 http://localhost:3000에서 왔을 때만 허용
-      if (origin === 'http://localhost:6500' || origin === 'http://localhost:3000') {
+      // origin이 null일 경우를 고려하여, null일 경우에도 허용
+      if (!origin || origin === 'http://localhost:6500' || origin === 'http://localhost:3000') {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -32,8 +32,16 @@ app.use(
   })
 );
 
+// OPTIONS 요청 처리 추가
 app.options('*', cors({
-  origin: ['http://localhost:6500', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    // origin이 null일 경우를 고려하여, null일 경우에도 허용
+    if (!origin || origin === 'http://localhost:6500' || origin === 'http://localhost:3000') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ["GET", "POST", "DELETE", "PUT"],
 }));
 
