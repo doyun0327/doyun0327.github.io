@@ -16,17 +16,26 @@ const secretKey = process.env.REACT_APP_SECRET_KEY;
 const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
-app.options('*', cors())
 
 app.use(
   cors({
-    origin: ['http://localhost:6500', 'http://localhost:3000'], // 클라이언트 출처
-    methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
-    // credentials: true, // 쿠키를 포함한 요청을 허용
+    origin: function (origin, callback) {
+      // 요청이 http://localhost:6500 또는 http://localhost:3000에서 왔을 때만 허용
+      if (origin === 'http://localhost:6500' || origin === 'http://localhost:3000') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    // credentials: true, // 쿠키 포함 요청 허용 시 활성화
   })
 );
 
-
+app.options('*', cors({
+  origin: ['http://localhost:6500', 'http://localhost:3000'],
+  methods: ["GET", "POST", "DELETE", "PUT"],
+}));
 
 // PostgreSQL 연결 정보
 const pool = new Pool({
