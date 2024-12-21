@@ -16,6 +16,8 @@ const secretKey = process.env.REACT_APP_SECRET_KEY;
 const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
+app.options('*', cors())
+
 app.use(
   cors({
     origin: ['http://localhost:6500', 'http://localhost:3000'], // 클라이언트 출처
@@ -24,12 +26,7 @@ app.use(
   })
 );
 
-// Preflight 요청 처리
-app.options('*', cors({
-  origin: ['http://localhost:6500', 'http://localhost:3000'],
-  methods: ["GET", "POST", "DELETE", "PUT"],
-  credentials: true,
-}));
+
 
 // PostgreSQL 연결 정보
 const pool = new Pool({
