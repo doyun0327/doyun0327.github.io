@@ -9,7 +9,7 @@ import {
 
 //Axios 인스턴스 생성
 const api = axios.create({
-  baseURL: 'http://localhost:6500',
+  baseURL: 'http://localhost:4000',
   headers: { "Content-Type": "application/json" },
 });
 
