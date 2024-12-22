@@ -36,6 +36,9 @@ const corsOptions = {
 // CORS 미들웨어를 전역으로 적용
 app.use(cors(corsOptions));
 
+// OPTIONS 요청에 대한 응답 처리
+app.options('*', cors(corsOptions)); 
+
 // PostgreSQL 연결 정보
 const pool = new Pool({
   user: process.env.DB_USER,
