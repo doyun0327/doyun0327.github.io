@@ -63,10 +63,11 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", cors(corsOptionsDelegate), (req, res) => {
+  console.log('로그인 누름')
   try {
     const { id, password } = req.body;
 
-    res.header("Access-Control-Allow-Origin", "*");
+
     if (id === "test" && password === "test") {
       const payload = { id, name: "테스트" };
       const accessToken = jwt.sign(payload, secretKey, { expiresIn: "5s" });
