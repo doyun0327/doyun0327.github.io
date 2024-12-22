@@ -45,11 +45,10 @@ const corsOptions = {
     }
   },
   methods: ["GET", "POST", "DELETE", "PUT"],
-  // credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
+  //  credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
   allowedHeaders: ['Content-Type', 'Authorization'],  // 허용할 헤더 설정
 };
 
-// CORS 미들웨어를 전역으로 적용
 // CORS 미들웨어를 전역으로 적용
 app.use(cors({
   origin: [
@@ -58,9 +57,16 @@ app.use(cors({
   ]
 }));
 
+// CORS 헤더를 수동으로 설정하는 미들웨어 추가
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");  // 모든 출처에 대해 허용
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");  // 허용할 HTTP 메소드 설정
+  next();
+});
 
 // OPTIONS 요청에 대한 응답 처리
-app.options('*', cors(corsOptions)); 
+app.options('*', cors(corsOptions));
 
 // PostgreSQL 연결 정보
 // const pool = new Pool({
@@ -96,7 +102,7 @@ app.post("/login", cors(corsOptionsDelegate), (req, res) => {
   try {
     const { id, password } = req.body;
 
-
+    res.header("Access-Control-Allow-Origin", "*");
     if (id === "test" && password === "test") {
       const payload = { id, name: "테스트" };
       const accessToken = jwt.sign(payload, secretKey, { expiresIn: "5s" });
