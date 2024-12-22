@@ -27,7 +27,7 @@ app.use(
 
 // Preflight 요청 처리
 app.options('*', cors({
-  origin: ['http://localhost:6500', 'http://localhost:3000'],
+  origin: ['http://localhost:6500', 'http://localhost:3000','http://192.168.219.105:6500'],
   methods: ["GET", "POST", "DELETE", "PUT"],
   // credentials: true,
 }));
