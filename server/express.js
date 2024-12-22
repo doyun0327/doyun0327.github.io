@@ -21,6 +21,7 @@ const allowedOrigins = ['http://localhost:3000', 'http://localhost:6500'];  // �
 
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log('요기요')
     // origin이 null일 경우에도 허용
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);  // CORS를 허용
@@ -34,7 +35,14 @@ const corsOptions = {
 };
 
 // CORS 미들웨어를 전역으로 적용
-app.use(cors(corsOptions));
+// CORS 미들웨어를 전역으로 적용
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:6500',
+  ]
+}));
+
 
 // OPTIONS 요청에 대한 응답 처리
 //app.options('*', cors(corsOptions)); 
