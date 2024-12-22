@@ -17,25 +17,8 @@ const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
 
-
 // CORS 설정
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // origin이 null일 경우에도 허용
-      if (!origin || origin === 'http://localhost:6500' || origin === 'http://localhost:3000') {
-        callback(null, true);  // CORS를 허용
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
-  })
-);
-
-// OPTIONS 요청에 대한 처리
-app.options('*', cors({
+const corsOptions = {
   origin: function (origin, callback) {
     // origin이 null일 경우에도 허용
     if (!origin || origin === 'http://localhost:6500' || origin === 'http://localhost:3000') {
@@ -46,7 +29,10 @@ app.options('*', cors({
   },
   methods: ["GET", "POST", "DELETE", "PUT"],
   credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
-}));
+};
+
+// CORS 미들웨어를 전역으로 적용
+app.use(cors(corsOptions));
 
 // PostgreSQL 연결 정보
 const pool = new Pool({
