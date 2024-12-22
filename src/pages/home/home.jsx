@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { logout } from "../../slice/userSlice";
 import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import api from "../../api/api";
 import { getAccessToken } from "../../utils/auth";
 import { CiClock2  } from "react-icons/ci";
@@ -28,7 +27,6 @@ function App() {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const formData = new FormData();
-    console.log('values:', JSON.stringify(values));
   
     // 이미지와 텍스트 데이터를 formData에 추가
     formData.append('image', values.image);
