@@ -14,8 +14,8 @@ import SuccessAlert from "../../common/successAlert";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const seletedImage = useSelector((state)=>state.gallery.seletedImage.image)
-  const seletedtext = useSelector((state)=>state.gallery.seletedImage.text)
+  //const seletedImage = useSelector((state)=>state.gallery.seletedImage.image)
+ // const seletedtext = useSelector((state)=>state.gallery.seletedImage.text)
   const [alertMessage, setAlertMessage] = useState('');
 
 
