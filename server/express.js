@@ -21,55 +21,55 @@ const allowedOrigins = ['http://localhost:3000', 'http://localhost:6500'];  // �
 
 
 
-const corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (allowedOrigins.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true };  // 요청된 origin을 허용
-  } else {
-    corsOptions = { origin: false };  // CORS를 허용하지 않음
-  }
-  callback(null, corsOptions);  // callback에서 CORS 설정 반환
-};
-
-// 전역에서 CORS 미들웨어 적용
-app.use(cors(corsOptionsDelegate));
-
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     console.log('요기요')
-//     // origin이 null일 경우에도 허용
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);  // CORS를 허용
-//     } else {
-//       callback(new Error('Not allowed by CORS'));  // CORS 허용하지 않음
-//     }
-//   },
-//   methods: ["GET", "POST", "DELETE", "PUT"],
-//   // credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
-//   allowedHeaders: ['Content-Type', 'Authorization'],  // 허용할 헤더 설정
+// const corsOptionsDelegate = function (req, callback) {
+//   var corsOptions;
+//   if (allowedOrigins.indexOf(req.header('Origin')) !== -1) {
+//     corsOptions = { origin: true };  // 요청된 origin을 허용
+//   } else {
+//     corsOptions = { origin: false };  // CORS를 허용하지 않음
+//   }
+//   callback(null, corsOptions);  // callback에서 CORS 설정 반환
 // };
 
-// // CORS 미들웨어를 전역으로 적용
-// // CORS 미들웨어를 전역으로 적용
-// app.use(cors({
-//   origin: [
-//     'http://localhost:3000',
-//     'http://localhost:6500',
-//   ]
-// }));
+// // 전역에서 CORS 미들웨어 적용
+// app.use(cors(corsOptionsDelegate));
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log('요기요')
+    // origin이 null일 경우에도 허용
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);  // CORS를 허용
+    } else {
+      callback(new Error('Not allowed by CORS'));  // CORS 허용하지 않음
+    }
+  },
+  methods: ["GET", "POST", "DELETE", "PUT"],
+  // credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
+  allowedHeaders: ['Content-Type', 'Authorization'],  // 허용할 헤더 설정
+};
+
+// CORS 미들웨어를 전역으로 적용
+// CORS 미들웨어를 전역으로 적용
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:6500',
+  ]
+}));
 
 
 // OPTIONS 요청에 대한 응답 처리
-//app.options('*', cors(corsOptions)); 
+app.options('*', cors(corsOptions)); 
 
 // PostgreSQL 연결 정보
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+// const pool = new Pool({
+//   user: process.env.DB_USER,
+//   host: process.env.DB_HOST,
+//   database: process.env.DB_NAME,
+//   password: process.env.DB_PASSWORD,
+//   port: process.env.DB_PORT,
+// });
 
 // DB 연결 확인
 // pool
