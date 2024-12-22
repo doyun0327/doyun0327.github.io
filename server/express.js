@@ -36,16 +36,8 @@ const corsOptions = {
 // CORS 미들웨어를 전역으로 적용
 app.use(cors(corsOptions));
 
-app.options('*', (req, res) => {
-  // 로그로 OPTIONS 요청이 제대로 들어오는지 확인
-  console.log('OPTIONS request received');
-
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6500');  // 요청한 origin을 허용
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT');  // 허용할 HTTP 메서드
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 허용할 헤더
-  res.setHeader('Access-Control-Allow-Credentials', 'true');  // 인증 정보 허용
-  res.status(200).end();  // 200 OK로 응답
-});
+// OPTIONS 요청에 대한 응답 처리
+//app.options('*', cors(corsOptions)); 
 
 // PostgreSQL 연결 정보
 const pool = new Pool({
