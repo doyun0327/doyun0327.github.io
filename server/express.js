@@ -16,19 +16,21 @@ const secretKey = process.env.REACT_APP_SECRET_KEY;
 const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
-
 // CORS 설정
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:6500'];  // 허용할 Origin 리스트
+
 const corsOptions = {
   origin: function (origin, callback) {
     // origin이 null일 경우에도 허용
-    if (!origin || origin === 'http://localhost:6500' || origin === 'http://localhost:3000') {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);  // CORS를 허용
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS'));  // CORS 허용하지 않음
     }
   },
   methods: ["GET", "POST", "DELETE", "PUT"],
   credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
+  allowedHeaders: ['Content-Type', 'Authorization'],  // 허용할 헤더 설정
 };
 
 // CORS 미들웨어를 전역으로 적용
