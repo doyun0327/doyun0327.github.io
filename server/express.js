@@ -70,6 +70,14 @@ app.post("/login", (req, res) => {
   try {
     const { id, password } = req.body;
 
+
+       // CORS headers for this specific route
+       res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6500'); // Allow specific origin
+       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allowed methods
+       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
+       res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials (cookies)
+
+       
     if (id === "test" && password === "test") {
       const payload = { id, name: "테스트" };
       const accessToken = jwt.sign(payload, secretKey, { expiresIn: "5s" });
