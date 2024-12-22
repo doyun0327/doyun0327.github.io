@@ -17,13 +17,33 @@ const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
 
+// app.use(
+//   cors({
+//     origin: ['http://localhost:6500', 'http://localhost:3000','http://192.168.219.105:6500'], // 클라이언트 출처
+//     methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
+//  //   credentials: true, // 쿠키를 포함한 요청을 허용
+//   })
+// );
+
 app.use(
   cors({
-    origin: ['http://localhost:6500', 'http://localhost:3000','http://192.168.219.105:6500'], // 클라이언트 출처
-    methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
- //   credentials: true, // 쿠키를 포함한 요청을 허용
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        'http://localhost:6500',
+        'http://localhost:3000',
+        'http://192.168.219.105:6500'
+      ];
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true); // CORS를 허용
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    // credentials: true, // 쿠키 포함 요청 허용 시 활성화
   })
 );
+
 
 // Preflight 요청 처리
 app.options('*', cors({
