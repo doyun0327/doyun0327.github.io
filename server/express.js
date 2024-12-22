@@ -62,7 +62,7 @@ app.get("/", (req, res) => {
   res.send("연결성공");
 });
 
-app.post("/login", cors(corsOptionsDelegate), (req, res) => {
+app.post("/login", (req, res) => {
   console.log('로그인 누름')
   try {
     const { id, password } = req.body;
