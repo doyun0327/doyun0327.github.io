@@ -29,7 +29,7 @@ const corsOptions = {
     }
   },
   methods: ["GET", "POST", "DELETE", "PUT"],
-  credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
+  // credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
   allowedHeaders: ['Content-Type', 'Authorization'],  // 허용할 헤더 설정
 };
 
@@ -71,13 +71,6 @@ app.post("/login", (req, res) => {
     const { id, password } = req.body;
 
 
-       // CORS headers for this specific route
-       res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6500'); // Allow specific origin
-       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allowed methods
-       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
-       res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow credentials (cookies)
-
-       
     if (id === "test" && password === "test") {
       const payload = { id, name: "테스트" };
       const accessToken = jwt.sign(payload, secretKey, { expiresIn: "5s" });
