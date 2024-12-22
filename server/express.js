@@ -16,57 +16,21 @@ const secretKey = process.env.REACT_APP_SECRET_KEY;
 const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
-// CORS 설정
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:6500'];  // 허용할 Origin 리스트
 
+app.use(
+  cors({
+    origin: ['http://localhost:6500', 'http://localhost:3000'], // 클라이언트 출처
+    methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
+ //   credentials: true, // 쿠키를 포함한 요청을 허용
+  })
+);
 
-
-// const corsOptionsDelegate = function (req, callback) {
-//   var corsOptions;
-//   if (allowedOrigins.indexOf(req.header('Origin')) !== -1) {
-//     corsOptions = { origin: true };  // 요청된 origin을 허용
-//   } else {
-//     corsOptions = { origin: false };  // CORS를 허용하지 않음
-//   }
-//   callback(null, corsOptions);  // callback에서 CORS 설정 반환
-// };
-
-// // 전역에서 CORS 미들웨어 적용
-// app.use(cors(corsOptionsDelegate));
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    console.log('요기요')
-    // origin이 null일 경우에도 허용
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);  // CORS를 허용
-    } else {
-      callback(new Error('Not allowed by CORS'));  // CORS 허용하지 않음
-    }
-  },
+// Preflight 요청 처리
+app.options('*', cors({
+  origin: ['http://localhost:6500', 'http://localhost:3000'],
   methods: ["GET", "POST", "DELETE", "PUT"],
-  //  credentials: true,  // 쿠키와 인증 정보 포함 요청 허용
-  allowedHeaders: ['Content-Type', 'Authorization'],  // 허용할 헤더 설정
-};
-
-// CORS 미들웨어를 전역으로 적용
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:6500',
-  ]
+  // credentials: true,
 }));
-
-// CORS 헤더를 수동으로 설정하는 미들웨어 추가
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");  // 모든 출처에 대해 허용
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");  // 허용할 HTTP 메소드 설정
-  next();
-});
-
-// OPTIONS 요청에 대한 응답 처리
-app.options('*', cors(corsOptions));
 
 // PostgreSQL 연결 정보
 // const pool = new Pool({
