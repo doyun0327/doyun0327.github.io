@@ -19,7 +19,6 @@ function App() {
   const [alertMessage, setAlertMessage] = useState('');
 
 
-console.log('seletedImage'+JSON.stringify(seletedImage))
   const handleLogout= () =>{
     dispatch(logout());
     localStorage.removeItem("accessToken"); // 액세스 토큰 삭제
