@@ -16,7 +16,6 @@ const secretKey = process.env.REACT_APP_SECRET_KEY;
 const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
-
 // app.use(
 //   cors({
 //     origin: ['http://localhost:6500', 'http://localhost:3000','http://192.168.219.105:6500'], // 클라이언트 출처
@@ -29,14 +28,14 @@ app.use(
   cors({
     origin: function (origin, callback) {
       const allowedOrigins = [
-        'http://localhost:6500',
-        'http://localhost:3000',
-        'http://192.168.219.105:6500'
+        "http://localhost:6500",
+        "http://localhost:3000",
+        "http://192.168.219.105:6500",
       ];
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true); // CORS를 허용
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error("Not allowed by CORS"));
       }
     },
     methods: ["GET", "POST", "DELETE", "PUT"],
@@ -44,13 +43,19 @@ app.use(
   })
 );
 
-
 // Preflight 요청 처리
-app.options('*', cors({
-  origin: ['http://localhost:6500', 'http://localhost:3000','http://192.168.219.105:6500'],
-  methods: ["GET", "POST", "DELETE", "PUT"],
-  // credentials: true,
-}));
+app.options(
+  "*",
+  cors({
+    origin: [
+      "http://localhost:6500",
+      "http://localhost:3000",
+      "http://192.168.219.105:6500",
+    ],
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    // credentials: true,
+  })
+);
 
 // PostgreSQL 연결 정보
 // const pool = new Pool({
@@ -83,10 +88,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log('로그인 누름')
+  console.log("로그인 누름");
   try {
     const { id, password } = req.body;
-
 
     if (id === "test" && password === "test") {
       const payload = { id, name: "테스트" };
@@ -411,6 +415,6 @@ app.put("/edit/:filename", upload.single("image"), (req, res) => {
 //   });
 // });
 //port에 접속 성공하면 콜백 함수를 실행시킨다..
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`server open~~~~  http://localhost:${port}`);
 });
