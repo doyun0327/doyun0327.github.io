@@ -16,6 +16,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "formik": "^2.4.6",
+    "http-proxy-middleware": "^3.0.3",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "lodash.debounce": "^4.0.8",
@@ -43,7 +44,7 @@
     "dev": "react-scripts start",
     "stg": "react-scripts build && serve -s build -l 6500"
   },
-
+  "proxy": "http://192.168.219.105:4000",
   "eslintConfig": {
     "extends": [
       "react-app",
