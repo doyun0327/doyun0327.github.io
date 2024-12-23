@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/
 const YesNoModal = ({ open, onClose, onConfirm, message }) => {
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>알림!</DialogTitle>
+      <DialogTitle>알림</DialogTitle>
       <DialogContent>
         <p>{message}</p>
       </DialogContent>
