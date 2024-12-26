@@ -16,30 +16,11 @@ const secretKey = process.env.REACT_APP_SECRET_KEY;
 const refreshSecretKey = process.env.REACT_APP_REFRESH_SECRET_KEY;
 app.use(express.json());
 
-// app.use(
-//   cors({
-//     origin: ['http://localhost:6500', 'http://localhost:3000','http://192.168.219.105:6500'], // 클라이언트 출처
-//     methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
-//  //   credentials: true, // 쿠키를 포함한 요청을 허용
-//   })
-// );
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
-        "http://localhost:6500",
-        "http://localhost:3000",
-        "http://192.168.219.105:6500",
-      ];
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, true); // CORS를 허용
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    // credentials: true, // 쿠키 포함 요청 허용 시 활성화
+    origin: ["http://localhost:6500", "http://localhost:3000"], // 클라이언트 출처
+    methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
+    credentials: true, // 쿠키를 포함한 요청을 허용
   })
 );
 
@@ -47,15 +28,84 @@ app.use(
 app.options(
   "*",
   cors({
-    origin: [
-      "http://localhost:6500",
-      "http://localhost:3000",
-      "http://192.168.219.105:6500",
-    ],
+    origin: ["http://localhost:6500", "http://localhost:3000"],
     methods: ["GET", "POST", "DELETE", "PUT"],
-    // credentials: true,
+    credentials: true,
   })
 );
+
+// app.use(
+//   cors({
+//     //  origin: "*",
+//     origin: [
+//       "http://localhost:6500",
+//       "http://localhost:3000",
+//       "http://192.168.219.105:6500",
+//       "http://192.168.0.92:6500",
+//     ], // 클라이언트 출처
+//     methods: ["GET", "POST", "DELETE", "PUT"], // 허용할 HTTP 메소드
+//     //   credentials: true, // 쿠키를 포함한 요청을 허용
+//   })
+// );
+
+// CORS 직접 헤더 설정
+// app.use((req, res, next) => {
+//   console.log("CORS 요청이 들어왔습니다.");
+//   console.log(`요청된 URL: ${req.originalUrl}`);
+//   console.log(`요청된 메서드: ${req.method}`);
+
+//   // CORS 헤더 설정
+//   res.header(
+//     "Access-Control-Allow-Origin",
+//     "http://192.168.0.92:6500",
+//     "http://localhost:3000"
+//   );
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   res.header("Access-Control-Allow-Credentials", "true");
+
+//   // OPTIONS 요청에 대해 응답 처리
+//   if (req.method === "OPTIONS") {
+//     console.log("OPTIONS 요청을 처리하고 있습니다.");
+//     return res.status(200).end();
+//   }
+
+//   next(); // 다음 미들웨어로 넘어감
+// });
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       const allowedOrigins = [
+//         "http://localhost:6500",
+//         "http://localhost:3000",
+//         "http://192.168.219.105:6500",
+//       ];
+//       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+//         callback(null, true); // CORS를 허용
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     methods: ["GET", "POST", "DELETE", "PUT"],
+//     // credentials: true, // 쿠키 포함 요청 허용 시 활성화
+//   })
+// );
+
+// Preflight 요청 처리
+// app.options(
+//   "*",
+//   cors({
+//     origin: [
+//       "http://localhost:6500",
+//       "http://localhost:3000",
+//       "http://192.168.219.105:6500",
+//       "http://192.168.0.92:6500",
+//     ],
+//     methods: ["GET", "POST", "DELETE", "PUT"],
+//     // credentials: true,
+//   })
+// );
 
 // PostgreSQL 연결 정보
 // const pool = new Pool({
@@ -415,6 +465,6 @@ app.put("/edit/:filename", upload.single("image"), (req, res) => {
 //   });
 // });
 //port에 접속 성공하면 콜백 함수를 실행시킨다..
-app.listen(port, "0.0.0.0", () => {
+app.listen(port, () => {
   console.log(`server open~~~~  http://localhost:${port}`);
 });
